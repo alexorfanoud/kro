@@ -1,0 +1,44 @@
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: memcached-server
+spec:
+  selector:
+    app: memcached-server
+  ports:
+    - protocol: TCP
+      port: 11211
+      targetPort: 11211
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: memcached-server
+    labels:
+        app: memcached-server
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: memcached-server
+    template:
+        metadata:
+            name: memcached-server
+            labels:
+                app: memcached-server
+        spec:
+            containers:
+            - name: memcached-server
+              image: cloudsuite3/data-caching:server
+              imagePullPolicy: Always
+              ports:
+              - containerPort: 11211
+              tty: true
+              args: 
+                - "-t 4"
+                - "-m 4096"
+                - "-n 550"

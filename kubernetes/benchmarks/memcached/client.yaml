@@ -1,0 +1,27 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: memcached-client
+    labels:
+        app: memcached-client
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: memcached-client
+    template:
+        metadata:
+            name: memcached-client
+            labels:
+                app: memcached-client
+        spec:
+            containers:
+            - name: memcached-client
+              image: cloudsuite3/data-caching:client
+              imagePullPolicy: Always
+              command:
+                - "tail"
+                - "-f"
+                - "/dev/null"
