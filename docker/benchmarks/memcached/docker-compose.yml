@@ -1,0 +1,24 @@
+version: '3.6'
+
+services:
+    server:
+        image: cloudsuite3/data-caching:server
+        command: "-t 4 -m 4096 -n 550"
+        tty: true
+
+    client:
+      build: ./client
+      tty: true
+      command:
+      - "-w 6"
+      - "-S 2"
+      - "-D 4096"
+      - "-T 1"
+      - "-s docker_servers.txt"
+      - "-t 15"
+      - "-Q 10"
+      - "-r 9"
+      depends_on:
+        - server
+      volumes:
+        - "~/dev/kro/docker/benchmarks/memcached/docker_servers.txt:/usr/src/memcached/memcached_client/docker_servers.txt"
