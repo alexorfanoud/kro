@@ -6,19 +6,38 @@ services:
         command: "-t 4 -m 4096 -n 550"
         tty: true
 
-    client:
-      build: ./client
+    client_rps_calculator:
+      build: ./client_rps_calculator
       tty: true
       command:
       - "-w 6"
       - "-S 2"
       - "-D 4096"
       - "-T 1"
-      - "-s docker_servers.txt"
-      - "-t 15"
-      - "-Q 10"
-      - "-r 9"
+      - "-s ./docker_servers.txt"
+      - "-t 15s"
+      - "-Q 5"
+      - "-r 0.1"
+      - "-j"
+      - "-v"
       depends_on:
         - server
       volumes:
         - "~/dev/kro/docker/benchmarks/memcached/docker_servers.txt:/usr/src/memcached/memcached_client/docker_servers.txt"
+
+    # client:
+    #   image: ./client
+    #   tty: true
+    #   command:
+    #   - "-w 6"
+    #   - "-S 2"
+    #   - "-D 4096"
+    #   - "-T 1"
+    #   - "-s docker_servers.txt"
+    #   - "-t 30"
+    #   - "-Q 10"
+    #   - "-r 9"
+    #   depends_on:
+    #     - server
+    #   volumes:
+    #     - "~/dev/kro/docker/benchmarks/memcached/docker_servers.txt:/usr/src/memcached/memcached_client/docker_servers.txt"
