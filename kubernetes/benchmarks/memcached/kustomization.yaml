@@ -5,3 +5,9 @@ namespace: kro
 resources:
   - server.yaml
   - client.yaml
+  - rps_calculator.yaml
+
+configMapGenerator:
+  - name: docker-servers
+    files:
+    - docker_servers.txt

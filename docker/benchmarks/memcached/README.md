@@ -1,21 +1,3 @@
-# To build
-
-```
-# For client
-DOCKER_REPO=<docker_repo>
-CLIENT_IMAGE=$DOCKER_REPO/cloudsuite-data-caching-client
-CLIENT_TAG=client
-sudo docker build -t $CLIENT_IMAGE:$CLIENT_TAG ./client
-docker push $CLIENT_IMAGE:$CLIENT_TAG
-
-# For rps calculator
-DOCKER_REPO=<docker_repo>
-RPS_CALCULATOR_IMAGE=$DOCKER_REPO/cloudsuite-data-caching-rps-calculator
-RPS_CALCULATOR_TAG=latest
-sudo docker build -t $RPS_CALCULATOR_IMAGE:$RPS_CALCULATOR_TAG ./client_rps_calculator
-docker push $RPS_CALCULATOR_IMAGE:$RPS_CALCULATOR_TAG
-```
-
 # To run
 
 ```

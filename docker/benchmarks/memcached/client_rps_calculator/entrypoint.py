@@ -202,7 +202,7 @@ def calculate_max_rps():
     rps = -1
     stats_output = ""
 
-    while qos > ARGS.QOS:
+    while qos > ARGS.QOS and (rps == -1 or rps > 10000):
         trial_run_statistics = execute_trial_run(rps)
         statistics = pd.DataFrame.from_records(trial_run_statistics, columns=['RPS','QOS'])
         rps_mean, qos_mean = process_run_statistics(rps, statistics)
@@ -219,8 +219,14 @@ def calculate_max_rps():
         rps = rps_mean - ARGS.rps_reduction_step
         qos = qos_mean
 
-    Logger.success(stats_output)
-    return rps_mean
+    if qos < ARGS.QOS:
+        Logger.success(stats_output)
+        res = rps_mean
+    else:
+        Logger.error("Could not find rps that satisfies the required QOS")
+        res = -1
+
+    return res
 
 
 

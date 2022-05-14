@@ -3,23 +3,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: memcached-client
+    name: memcached-rps-calculator
     labels:
-        app: memcached-client
+        app: memcached-rps-calculator
 spec:
     replicas: 1
     selector:
         matchLabels:
-            app: memcached-client
+            app: memcached-rps-calculator
     template:
         metadata:
-            name: memcached-client
+            name: memcached-rps-calculator
             labels:
-                app: memcached-client
+                app: memcached-rps-calculator
         spec:
           containers:
-          - name: memcached-client
-            image: aorfanou/cloudsuite-data-caching-client:latest
+          - name: memcached-rps-calculator
+            image: aorfanou/cloudsuite-data-caching-rps-calculator:latest
             imagePullPolicy: Always
             tty: true
             args:
@@ -28,9 +28,11 @@ spec:
             - "-D 4096"
             - "-T 1"
             - "-s ./volumes/docker_servers.txt"
-            - "-g 0.8"
-            - "-c 200"
-            - "-r 50000"
+            - "-t 15s"
+            - "-Q 10"
+            - "-r 0.1"
+            - "-j"
+            - "-v"
             volumeMounts:
             - name: docker-servers
               mountPath: /usr/src/memcached/memcached_client/volumes/docker_servers.txt
