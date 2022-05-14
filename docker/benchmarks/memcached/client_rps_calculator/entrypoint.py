@@ -186,6 +186,9 @@ def process_run_statistics(rps, statistics):
         rps_upper = rps * (1 + ARGS.rps_diff_tolerance)
         statistics = statistics[(statistics['RPS'] >= rps_lower) & (statistics['RPS'] <= rps_upper)]
         
+    # TODO: is the mean a good metric to depend on? Should we use the max or something else?
+    if ARGS.verbose:
+        Logger.warn(statistics)
     rps_mean = statistics['RPS'].mean()
     qos_mean = statistics['QOS'].mean()
 
