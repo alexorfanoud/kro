@@ -1,0 +1,7 @@
+bases:
+- grafana
+- prometheus
+- wca
+
+resources:
+- namespaces.yaml

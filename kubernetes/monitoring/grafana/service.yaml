@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  labels:
+    kubernetes.io/cluster-service: "true"
+    k8s-app: Grafana
+    kubernetes.io/name: grafana
+spec:
+  ports:
+  - name: web
+    port: 3000
+    targetPort: 3000
+    protocol: TCP
+  selector:
+    name: grafana

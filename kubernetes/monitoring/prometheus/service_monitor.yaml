@@ -1,0 +1,12 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-internal-metrics-monitor
+spec:
+  selector:
+    matchLabels:
+      k8s-app: Prometheus
+  endpoints:
+  - port: web
+    interval: 10s
+    path: /metrics

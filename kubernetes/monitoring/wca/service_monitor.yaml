@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: wca
+  labels:
+    team: monitoring
+spec:
+  selector:
+    matchLabels:
+      name: wca
+  endpoints:
+  - port: web
+    interval: 60s
+    # https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
+    # https://github.com/grafana/kubernetes-app/issues/31#issuecomment-409862549
+    relabelings:
+    - sourceLabels: [__meta_kubernetes_endpoint_node_name]
+      action: replace
+      targetLabel: nodename

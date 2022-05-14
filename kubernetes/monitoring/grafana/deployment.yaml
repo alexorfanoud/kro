@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: grafana
+  template:
+    metadata:
+      labels:
+        name: grafana
+    spec:
+      tolerations:
+        - key: master
+          operator: Exists
+          effect: NoSchedule
+      nodeSelector:
+        node-role.kubernetes.io/master: ""
+      containers:
+      - name: grafana
+        image: grafana/grafana
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /var/lib/grafana
+          name: grafana-storage
+        # - mountPath: /etc/grafana/provisioning/datasources
+        #   name: grafana-datasources
+        #   readOnly: false
+        # - mountPath: /etc/grafana/provisioning/dashboards
+        #   name: grafana-dashboards
+        #   readOnly: false
+        env:
+        - name: GF_SERVER_HTTP_PORT
+          value: "3000"
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          value: "admin"
+        - name: GF_INSTALL_PLUGINS
+          value: "grafana-kubernetes-app"
+      volumes:
+      - name: grafana-storage
+        hostPath:
+          path: /var/lib/grafana
+      # - name: grafana-datasources
+      #   configMap:
+      #       name: grafana-datasources
+      # - name: grafana-dashboards
+      #   configMap:
+      #       name: grafana-dashboards

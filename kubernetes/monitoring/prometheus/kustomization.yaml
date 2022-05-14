@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: prometheus
+
+resources:
+  - prometheus.yaml
+  - prometheus_rule.app.yaml
+  - prometheus_rule.apm.yaml
+  - prometheus_rule.score.yaml
+  - prometheus_rule_benchmark.yaml
+  - cadvisor_prometheus_rule.score.yaml
+  - prometheus_rule.pmem-cadvisor.yaml
+  - prometheus_rule.16-compatibility-rules-new-to-old.yaml
+  - service_account.yaml
+  - service.yaml
+  - operator/deployment.yaml
+  - operator/service_account.yaml
+  - operator/service.yaml
+  - storage_class.yaml
+  - persistent_volume.yaml

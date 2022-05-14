@@ -1,0 +1,33 @@
+runner: !AllocationRunner
+  measurement_runner: !MeasurementRunner
+    interval: 10.0
+    node: !KubernetesNode
+      cgroup_driver: cgroupfs
+      monitored_namespaces: ["kro"]
+      kubeapi_host: !Env KUBERNETES_SERVICE_HOST
+      kubeapi_port: !Env KUBERNETES_SERVICE_PORT
+      node_ip: !Env HOST_IP
+  
+    metrics_storage: !LogStorage
+      overwrite: True
+      output_filename: /var/lib/wca/metrics.prom
+  
+    extra_labels:
+      node: !Env HOSTNAME
+    event_names:
+      - task_cycles # do not remove: USED BY E2E tests
+      - task_instructions
+      - task_cache_references
+      - task_cache_misses
+    wss_reset_cycles: 20
+    wss_membw_threshold: 0.01
+    wss_stable_cycles: -5
+  
+  allocator: !NOPAllocator
+    # config: "/etc/wca/static_allocation.yaml"
+
+  allocations_storage: !LogStorage
+    output_filename: allocations.logs
+
+  anomalies_storage: !LogStorage
+    output_filename: anomalies.logs

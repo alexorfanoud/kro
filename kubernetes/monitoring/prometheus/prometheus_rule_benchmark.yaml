@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    role: prometheus-rules
+  name: prometheus-benchmark-metrics
+  namespace: prometheus
+spec:
+  groups:
+
+  - name: benchmark
+    rules:
+    - record: benchmark_success_request_rate_for_30
+      expr: 'rate(benchmark_request_processing_seconds[30s])'
+      labels:
+        status_code: "200"

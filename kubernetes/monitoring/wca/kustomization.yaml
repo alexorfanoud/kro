@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: wca
+
+images:
+  - name: wca
+    newName: aorfanou/wca
+    newTag: master
+
+resources:
+  - daemonset.yaml
+  - service.yaml
+  - service_account.yaml
+  - priority_class.yaml
+  - service_monitor.yaml
+
+configMapGenerator:
+  - name: allocator-config
+    files:
+    - configs/allocator_config.yaml
+  - name: static-allocation-config
+    files:
+    - configs/static_allocation.yaml

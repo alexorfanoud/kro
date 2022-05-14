@@ -1,0 +1,282 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    role: prometheus-rules
+  name: prometheus-apm
+spec:
+  groups:
+    - name: memcached-mutilate
+      rules:
+        - record: apm_mutilate_alive
+          expr: ceil(rate(apm_mutilate_stdout_lines[30s])>0)
+        - record: apm_mutilate_qps
+          expr: avg_over_time(apm_mutilate_scan_qps[60s]) and apm_mutilate_alive
+        - record: apm_mutilate_latency
+          expr: avg_over_time(apm_mutilate_scan_read_p99[60s]) and apm_mutilate_alive
+        - record: apm_memcached_latency  # ms p99
+          expr: apm_mutilate_latency * on(task_name) group_right() task_up / 1e3
+        - record: apm_memcached_qps
+          expr: apm_mutilate_qps * on(task_name) group_right() task_up 
+        # T & L
+        - record: apm_throughput
+          expr: apm_memcached_qps
+        - record: apm_latency    # percentile99 [ms]
+          expr: apm_memcached_latency
+    - name: redis-memtier
+      rules:
+        # intermediary
+        - record: apm_memtier_alive
+          expr: ceil(rate(apm_memtier_stdout_lines[1m])>0)
+        - record: apm_memtier_ops
+          expr: avg_over_time(apm_memtier_scan_ops_sec[1m]) and apm_memtier_alive
+        - record: apm_memtier_latency
+          expr: avg_over_time(apm_memtier_scan_latency[1m]) and apm_memtier_alive
+        # intermediary for 98 percentile
+        # 98 percentile is similar for 99 percentile, which is harder to parse by fluetnd form memtier
+        # buckets are not round percentiles (ex. 94,34%), so parser get the biggest (ex. 94,98)
+        - record: apm_memtier_alive_98
+          expr: label_replace(apm_memtier_alive, "percentile", "98", "", "")
+        - record:  apm_memtier_latency_histogram_98
+          expr: avg_over_time(apm_memtier_get_histogram{percentile="98"}[1m]) and apm_memtier_alive_98
+        # common apm metrics
+        - record: apm_redis_latency  # msec latency
+          expr: apm_memtier_latency * on(task_name) group_right() task_up
+        - record: apm_redis_qps
+          expr: apm_memtier_ops * on(task_name) group_right() task_up
+        - record: apm_redis_latency_histogram_98  # msec latency
+          expr: apm_memtier_latency_histogram_98 * on(task_name) group_right() task_up
+        # T & L per app
+        - record: apm_throughput
+          expr: apm_redis_qps
+        - record: apm_latency
+          expr: apm_redis_latency
+
+    - name: stress-stream
+      rules:
+        - record: apm_stress_bogo_ops
+          expr: rate(apm_stress_ng_bogo_ops_counter[90s]) and rate(apm_stress_ng_stdout_lines[15s]) > 0
+        - record: apm_stress_bogo_ops_per_task
+          expr: apm_stress_bogo_ops * on(task_name) group_right() task_up
+          # T & L
+        - record: apm_throughput      # bogo/ops (group_right to get labels from tasks)
+          expr: apm_stress_bogo_ops_per_task
+        - record: apm_latency          # average milliseconds to perform one bogus operation (ms)
+          expr: 1e3 / apm_stress_bogo_ops_per_task
+
+    - name: pmbench
+      rules:
+        # intermediary
+        - record: apm_pmbench_alive
+          expr: ceil(rate(apm_pmbench_stdout_lines[30s])>0)
+        - record: apm_pmbench_page_access_per_thread
+          expr: avg_over_time(apm_pmbench_page_access_delta[1m]) and ignoring(thread) apm_pmbench_alive
+        - record: apm_pmbench_avg_page_latency_per_thread
+          expr: avg_over_time(apm_pmbench_avg_page_latency[1m]) and ignoring(thread) apm_pmbench_alive
+        # common apm metrics
+        - record: apm_pmbench_ops # group threads by avg
+          expr: avg by (app, endpoint, exported_namespace, instance, job, namespace, node, pod, podname, service, task_name) (apm_pmbench_page_access_per_thread)  * on(task_name) group_right() task_up
+        - record: apm_pmbench_latency # msec latency  # group threads by avg
+          expr: avg by (app, endpoint, exported_namespace, instance, job, namespace, node, pod, podname, service, task_name) (apm_pmbench_avg_page_latency_per_thread) * on(task_name) group_right() task_up / 1e3
+        # T & L per app
+        - record: apm_throughput
+          expr: apm_pmbench_ops
+        - record: apm_latency
+          expr: apm_pmbench_latency
+
+    - name: sysbench-memory
+      rules:
+        - record: apm_sysbench_alive
+          expr: ceil(rate(apm_sysbench_stdout_lines[15s])>0)
+        - record: apm_sysbench_mbps    # MiB/sec
+          expr: avg_over_time(apm_sysbench_qps[90s]) and apm_sysbench_alive
+        - record: apm_sysbench_mbps_per_task
+          expr: apm_sysbench_mbps * on(task_name) group_right() task_up
+          # T & L
+        - record: apm_throughput       # MiB/sec (group_right to get labels from tasks)
+          expr: apm_sysbench_mbps_per_task
+        - record: apm_latency          # average milliseconds (ms) to transfer 1GB
+          expr: 1e3 / (apm_sysbench_mbps_per_task/1e3)
+    - name: specjbb
+      rules:
+        # -------------Specjbb---------------------------
+        - record: apm_specjbb_alive
+          expr: ceil(rate(apm_specjbb_stdout_lines[15s])>0)
+        - record: apm_specjbb_ops
+          expr: avg_over_time(apm_specjbb_PR[90s]) and apm_specjbb_alive
+        # usec(microseconds) convert to miliseconds (msec)
+        - record: apm_specjbb_latency
+          expr: avg_over_time(apm_specjbb_p95[90s])/1000 and apm_specjbb_alive
+        # common apm metrics
+        - record: apm_specjbb_latency_per_task
+          expr:  apm_specjbb_latency * on(task_name) group_right() task_up
+        - record: apm_specjbb_ops_per_task
+          expr: apm_specjbb_ops * on(task_name) group_right() task_up
+          # T & L
+        - record: apm_throughput
+          expr: apm_specjbb_ops_per_task
+        - record: apm_latency
+          expr: apm_specjbb_latency_per_task
+
+    - name: mysql-hammerdb
+      rules:
+        - record: apm_hammerdb_tpm_gauge_alive
+          expr: ceil(rate(apm_hammerdb_tpm_gauge_stdout_lines[30s])>0)
+        - record: apm_hammerdb_alive
+          expr: ceil(rate(apm_hammerdb_stdout_lines[30s])>0)
+        - record: apm_hammerdb_ops
+          expr: avg_over_time(apm_hammerdb_tpm[90s]) / 60 and apm_hammerdb_tpm_gauge_alive # it is collecting TPM (Transaction Per Minute) and it is necessary to change minutes to seconds to collect ops
+        - record: apm_hammerdb_latency
+          expr: avg_over_time(apm_hammerdb_latency_stdout[1m]) and ignoring(quantile, type_query) apm_hammerdb_alive
+        # common apm metrics
+        - record: apm_mysql_latency
+          expr: apm_hammerdb_latency{quantile='0.9',type_query='neword'} * on(task_name) group_right() task_up  / 1e3
+        - record: apm_mysql_qps
+          expr: apm_hammerdb_ops * on(task_name) group_right() task_up
+        # T & L per app
+        - record: apm_throughput      # transaction per minute from mysql (get by script 'mysql_tpm_gauge.py') https://www.hammerdb.com/docs/ch06s04.html
+          expr: apm_mysql_qps
+        - record: apm_latency         # perform 'neword' operation in milliseconds (ms) on quantile 90% https://www.hammerdb.com/docs/ch03s07.html
+          expr: apm_mysql_latency
+
+    - name: apm-generic
+      rules:
+        - record: apm_sli          #  SLI based on latency
+          expr: apm_latency
+        - record: apm_sli2          #  SLI based on throughput
+          expr: apm_throughput
+        #--------------------------------------- Targets for Latency [msecs]
+        # Memcached latency goal
+        - {record: apm_slo, labels: {app: memcached-mutilate-big},    expr: "6.3" }
+        - {record: apm_slo, labels: {app: memcached-mutilate-medium}, expr: "4.3" }
+        - {record: apm_slo, labels: {app: memcached-mutilate-small},  expr: "1.3" }
+
+        # Mysql latency goal
+        # - {record: apm_slo, labels: {app: mysql-hammerdb-big}, expr: "8.5"}
+        # - {record: apm_slo, labels: {app: mysql-hammerdb-medium}, expr: "2.8"}
+        - {record: apm_slo, labels: {app: mysql-hammerdb-small}, expr: "5"}
+
+        # Redis latency goal (msec)
+        - {record: apm_slo, labels: {app: redis-memtier-big},        expr: "6"}
+        - {record: apm_slo, labels: {app: redis-memtier-big-wss},    expr: "40"}
+        - {record: apm_slo, labels: {app: redis-memtier-medium},     expr: "5"}
+        - {record: apm_slo, labels: {app: redis-memtier-small},      expr: "5"}
+
+        # Specjbb latency 99% (msec)
+        - {record: apm_slo2, labels: {app: specjbb-preset-big-220}, expr: "50000"}
+        - {record: apm_slo2, labels: {app: specjbb-preset-big-60}, expr: "30000"}
+        - {record: apm_slo2, labels: {app: specjbb-preset-medium}, expr: "1000"}
+        - {record: apm_slo2, labels: {app: specjbb-preset-small}, expr: "5000"}
+
+        # Stress average duration for one bogus operation (maximum)
+        - {record: apm_slo, labels: {app: stress-stream-big},    expr: "526"}   # inverse of 1.9 ops * 1000
+        - {record: apm_slo, labels: {app: stress-stream-medium}, expr: "8000"}
+        - {record: apm_slo, labels: {app: stress-stream-small},  expr: "5000"}
+
+        # Sysbench average durations [ms]  of copying 1GB (maximum)
+        - {record: apm_slo, labels: {app: sysbench-memory-big}, expr: "60"}    # inverse of 16000 ops * 1000
+        - {record: apm_slo, labels: {app: sysbench-memory-medium}, expr: "60"}
+        - {record: apm_slo, labels: {app: sysbench-memory-small}, expr: "120"}
+
+
+        #--------------------------------------- Targets for Throughput [ops]
+        # Memcached QPS goal
+        - {record: apm_slo2, labels: {app: memcached-mutilate-big},    expr: "19800" }
+        - {record: apm_slo2, labels: {app: memcached-mutilate-medium}, expr: "38100" }
+        - {record: apm_slo2, labels: {app: memcached-mutilate-small},  expr: "48300" }
+
+        # Mysql transaction per minute goal
+        # - {record: apm_slo2, labels: {app: mysql-hammerdb-big}, expr: "1500000"}
+        # - {record: apm_slo2, labels: {app: mysql-hammerdb-medium}, expr: "460000"}
+        - {record: apm_slo2, labels: {app: mysql-hammerdb-small}, expr: "14400"}
+
+        # Redis QPS goal
+        - {record: apm_slo2, labels: {app: redis-memtier-big-wss}, expr: "20000"}
+        - {record: apm_slo2, labels: {app: redis-memtier-big},     expr: "80000"}
+        - {record: apm_slo2, labels: {app: redis-memtier-medium},     expr: "85000"}
+        - {record: apm_slo2, labels: {app: redis-memtier-small},      expr: "100000"}
+
+        # Specjbb PR (processed requests) per second
+        - {record: apm_slo2, labels: {app: specjbb-preset-big-220}, expr: "20000"}
+        - {record: apm_slo2, labels: {app: specjbb-preset-big-60}, expr: "28500"}
+        - {record: apm_slo2, labels: {app: specjbb-preset-medium}, expr: "10300"}
+        - {record: apm_slo2, labels: {app: specjbb-preset-small}, expr: "935"}
+
+        # Number of bogs per seconds
+        - {record: apm_slo2, labels: {app: stress-stream-big},    expr: "1.900"}
+        - {record: apm_slo2, labels: {app: stress-stream-medium}, expr: "0.2"}
+        - {record: apm_slo2, labels: {app: stress-stream-small},  expr: "0.3"}
+
+        # Sysbench number of copy operations
+        - {record: apm_slo2, labels: {app: sysbench-memory-big}, expr: "16000"}
+        - {record: apm_slo2, labels: {app: sysbench-memory-medium}, expr: "17100"}
+        - {record: apm_slo2, labels: {app: sysbench-memory-small}, expr: "8500"}
+
+
+
+        ##--------------------------------------- normalized
+        #  # Memcached QPS goal
+        #  - {record: apm_slo, labels: {app: memcached-big}, expr: 500}
+        #  - {record: apm_slo, labels: {app: memcached-medium}, expr: 500}
+        #  - {record: apm_slo, labels: {app: memcached-small}, expr: 500}
+        #  # Redis QPS goal
+        #  - {record: apm_slo, labels: {app: redis-big}, expr: 100000}
+        #  - {record: apm_slo, labels: {app: redis-medium}, expr: 100000}
+        #  - {record: apm_slo, labels: {app: redis-small}, expr: 100000}
+        #  # Stress Bogo / sec goal
+        #  - {record: apm_slo, labels: {app: stress-stream-big}, expr: 50}
+        #  - {record: apm_slo, labels: {app: stress-stream-medium}, expr: 50}
+        #  - {record: apm_slo, labels: {app: stress-stream-small}, expr: 50}
+        #  # Sysbench MB/s target
+        #  - {record: apm_slo, labels: {app: sysbench-memory-big}, expr: 50000}
+        #  - {record: apm_slo, labels: {app: sysbench-memory-medium}, expr: 50000}
+        #  - {record: apm_slo, labels: {app: sysbench-memory-small}, expr: 50000}
+
+        # NORMALIZED ACCORDING THE GOALS 1
+        - record: apm_sli_normalized
+          expr: apm_sli / on (app) group_left apm_slo
+
+        # NORMALIZED ACCORDING THE GOALS 2
+        - record: apm_sli2_normalized
+          expr: apm_sli2 / on (app) group_left apm_slo2
+
+    - name: apm-mode
+      rules:
+        - record: apm_sli_per_mode
+          expr: avg(apm_sli) by (nodename, app) * on (nodename) group_left() (sum(platform_mem_mode_size_bytes > 0) by (nodename) / sum(platform_mem_mode_size_bytes > 0) by (nodename))
+          labels:
+            mode: 2lm
+        - record: apm_sli_per_mode
+          expr: avg(apm_sli) by (nodename, app) * on (nodename) group_left() (sum(platform_mem_mode_size_bytes == 0) by (nodename) + 1)
+          labels:
+            mode: 1lm
+        - record: apm_sli2_per_mode
+          expr: avg(apm_sli2) by (nodename, app) * on (nodename) group_left() (sum(platform_mem_mode_size_bytes > 0) by (nodename) / sum(platform_mem_mode_size_bytes > 0) by (nodename))
+          labels:
+            mode: 2lm
+        - record: apm_sli2_per_mode
+          expr: avg(apm_sli2) by (nodename, app) * on (nodename) group_left() (sum(platform_mem_mode_size_bytes == 0) by (nodename) + 1)
+          labels:
+            mode: 1lm
+
+        # NORMALIZED ACCORDING THE GOALS 1
+        - record: apm_sli_normalized_per_mode
+          expr: apm_sli_per_mode / on (app) group_left apm_slo
+
+        # NORMALIZED ACCORDING THE GOALS 2
+        - record: apm_sli2_normalized_per_mode
+          expr: apm_sli2_per_mode / on (app) group_left apm_slo2
+
+    - name: ipc-mode
+      rules:
+        - record: apm_ipc
+          expr: avg(rate(task_instructions[15s]) / rate(task_cycles[15s])) by (app, nodename)
+
+        - record: apm_ipc_per_mode
+          expr: avg(apm_ipc) by (nodename, app) * on (nodename) group_left() (sum(platform_mem_mode_size_bytes > 0) by (nodename) / sum(platform_mem_mode_size_bytes > 0) by (nodename))
+          labels:
+            mode: 2lm
+        - record: apm_ipc_per_mode
+          expr: avg(apm_ipc) by (nodename, app) * on (nodename) group_left() (sum(platform_mem_mode_size_bytes == 0) by (nodename) + 1)
+          labels:
+            mode: 1lm

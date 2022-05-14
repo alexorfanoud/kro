@@ -1,0 +1,13 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: prometheus-prometheus-db-prometheus-prometheus-0
+spec:
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: /var/lib/prometheus
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: manual
+  volumeMode: Filesystem
