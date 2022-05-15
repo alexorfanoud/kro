@@ -1,0 +1,830 @@
+Start of experiment: 20200219_1038
+Run params: {   'exp_iter': 56,
+    'experiment_name': 'comparing_bar2d_vs_bar3d__option_A',
+    'experiment_stats': [   {   'ALGO': 'baseline',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(cpu=100,mbw=100,mem=100)',
+                                'balance': 0.8544157365863594,
+                                'broken%': 25,
+                                'bw_util': 0.14,
+                                'cpu_util': 0.43,
+                                'mem_util': 0.79,
+                                'scheduled%': 78,
+                                'utilization%': 45},
+                            {   'ALGO': 'enough_bw',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(cpu=100,mbw=100,mem=100)',
+                                'balance': 0.9019789629888268,
+                                'broken%': 0,
+                                'bw_util': 0.13,
+                                'cpu_util': 0.32,
+                                'mem_util': 0.79,
+                                'scheduled%': 73,
+                                'utilization%': 41},
+                            {   'ALGO': 'BAR',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(cpu=100,mbw=100,mem=100)',
+                                'balance': 0.9019789629888268,
+                                'broken%': 0,
+                                'bw_util': 0.13,
+                                'cpu_util': 0.32,
+                                'mem_util': 0.79,
+                                'scheduled%': 73,
+                                'utilization%': 41},
+                            {   'ALGO': 'LU_BAR',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(cpu=100,mbw=100,mem=100)',
+                                'balance': 0.9019789629888268,
+                                'broken%': 0,
+                                'bw_util': 0.13,
+                                'cpu_util': 0.32,
+                                'mem_util': 0.79,
+                                'scheduled%': 73,
+                                'utilization%': 41},
+                            {   'ALGO': 'LU_BAR_weights',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(cpu=100,mbw=100,mem=100)',
+                                'balance': 0.9019789629888268,
+                                'broken%': 0,
+                                'bw_util': 0.13,
+                                'cpu_util': 0.32,
+                                'mem_util': 0.79,
+                                'scheduled%': 73,
+                                'utilization%': 41},
+                            {   'ALGO': 'baseline',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(cpu=100,mbw=100,mem=100)',
+                                'balance': 0.6097515288219869,
+                                'broken%': 47,
+                                'bw_util': 0.13,
+                                'cpu_util': 0.38,
+                                'mem_util': 0.48,
+                                'scheduled%': 100,
+                                'utilization%': 33},
+                            {   'ALGO': 'enough_bw',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(cpu=100,mbw=100,mem=100)',
+                                'balance': 0.8964713479195723,
+                                'broken%': 0,
+                                'bw_util': 0.13,
+                                'cpu_util': 0.38,
+                                'mem_util': 0.48,
+                                'scheduled%': 100,
+                                'utilization%': 33},
+                            {   'ALGO': 'BAR',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(cpu=100,mbw=100,mem=100)',
+                                'balance': 0.8964713479195723,
+                                'broken%': 0,
+                                'bw_util': 0.13,
+                                'cpu_util': 0.38,
+                                'mem_util': 0.48,
+                                'scheduled%': 100,
+                                'utilization%': 33},
+                            {   'ALGO': 'LU_BAR',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(cpu=100,mbw=100,mem=100)',
+                                'balance': 0.8966018328956735,
+                                'broken%': 0,
+                                'bw_util': 0.13,
+                                'cpu_util': 0.38,
+                                'mem_util': 0.48,
+                                'scheduled%': 100,
+                                'utilization%': 33},
+                            {   'ALGO': 'LU_BAR_weights',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(cpu=100,mbw=100,mem=100)',
+                                'balance': 0.8966018328956735,
+                                'broken%': 0,
+                                'bw_util': 0.13,
+                                'cpu_util': 0.38,
+                                'mem_util': 0.48,
+                                'scheduled%': 100,
+                                'utilization%': 33},
+                            {   'ALGO': 'baseline',
+                                'NODES': '80(dram=80)',
+                                'TASKS': '300(cpu=100,mbw=100,mem=100)',
+                                'balance': 0.8611796066872965,
+                                'broken%': 23,
+                                'bw_util': 0.1,
+                                'cpu_util': 0.36,
+                                'mem_util': 0.72,
+                                'scheduled%': 86,
+                                'utilization%': 39},
+                            {   'ALGO': 'enough_bw',
+                                'NODES': '80(dram=80)',
+                                'TASKS': '300(cpu=100,mbw=100,mem=100)',
+                                'balance': 0.9009140289037076,
+                                'broken%': 0,
+                                'bw_util': 0.1,
+                                'cpu_util': 0.31,
+                                'mem_util': 0.79,
+                                'scheduled%': 86,
+                                'utilization%': 40},
+                            {   'ALGO': 'BAR',
+                                'NODES': '80(dram=80)',
+                                'TASKS': '300(cpu=100,mbw=100,mem=100)',
+                                'balance': 0.9009140289037076,
+                                'broken%': 0,
+                                'bw_util': 0.1,
+                                'cpu_util': 0.31,
+                                'mem_util': 0.79,
+                                'scheduled%': 86,
+                                'utilization%': 40},
+                            {   'ALGO': 'LU_BAR',
+                                'NODES': '80(dram=80)',
+                                'TASKS': '300(cpu=100,mbw=100,mem=100)',
+                                'balance': 0.9009140289037076,
+                                'broken%': 0,
+                                'bw_util': 0.1,
+                                'cpu_util': 0.31,
+                                'mem_util': 0.79,
+                                'scheduled%': 86,
+                                'utilization%': 40},
+                            {   'ALGO': 'LU_BAR_weights',
+                                'NODES': '80(dram=80)',
+                                'TASKS': '300(cpu=100,mbw=100,mem=100)',
+                                'balance': 0.9009140289037076,
+                                'broken%': 0,
+                                'bw_util': 0.1,
+                                'cpu_util': 0.31,
+                                'mem_util': 0.79,
+                                'scheduled%': 86,
+                                'utilization%': 40},
+                            {   'ALGO': 'baseline',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(mbw=30,cpu=120,mem=150)',
+                                'balance': 0.8864893369316419,
+                                'broken%': 8,
+                                'bw_util': 0.06,
+                                'cpu_util': 0.34,
+                                'mem_util': 0.78,
+                                'scheduled%': 52,
+                                'utilization%': 39},
+                            {   'ALGO': 'enough_bw',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(mbw=30,cpu=120,mem=150)',
+                                'balance': 0.8999713359811452,
+                                'broken%': 0,
+                                'bw_util': 0.05,
+                                'cpu_util': 0.29,
+                                'mem_util': 0.78,
+                                'scheduled%': 50,
+                                'utilization%': 37},
+                            {   'ALGO': 'BAR',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(mbw=30,cpu=120,mem=150)',
+                                'balance': 0.8999713359811452,
+                                'broken%': 0,
+                                'bw_util': 0.05,
+                                'cpu_util': 0.29,
+                                'mem_util': 0.78,
+                                'scheduled%': 50,
+                                'utilization%': 37},
+                            {   'ALGO': 'LU_BAR',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(mbw=30,cpu=120,mem=150)',
+                                'balance': 0.8999713359811452,
+                                'broken%': 0,
+                                'bw_util': 0.05,
+                                'cpu_util': 0.29,
+                                'mem_util': 0.78,
+                                'scheduled%': 50,
+                                'utilization%': 37},
+                            {   'ALGO': 'LU_BAR_weights',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(mbw=30,cpu=120,mem=150)',
+                                'balance': 0.8999713359811452,
+                                'broken%': 0,
+                                'bw_util': 0.05,
+                                'cpu_util': 0.29,
+                                'mem_util': 0.78,
+                                'scheduled%': 50,
+                                'utilization%': 37},
+                            {   'ALGO': 'baseline',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(mbw=30,cpu=120,mem=150)',
+                                'balance': 0.7526790202740005,
+                                'broken%': 10,
+                                'bw_util': 0.07,
+                                'cpu_util': 0.43,
+                                'mem_util': 0.67,
+                                'scheduled%': 100,
+                                'utilization%': 39},
+                            {   'ALGO': 'enough_bw',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(mbw=30,cpu=120,mem=150)',
+                                'balance': 0.8805893543973007,
+                                'broken%': 0,
+                                'bw_util': 0.07,
+                                'cpu_util': 0.43,
+                                'mem_util': 0.67,
+                                'scheduled%': 100,
+                                'utilization%': 39},
+                            {   'ALGO': 'BAR',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(mbw=30,cpu=120,mem=150)',
+                                'balance': 0.8730812565648971,
+                                'broken%': 0,
+                                'bw_util': 0.07,
+                                'cpu_util': 0.43,
+                                'mem_util': 0.67,
+                                'scheduled%': 100,
+                                'utilization%': 39},
+                            {   'ALGO': 'LU_BAR',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(mbw=30,cpu=120,mem=150)',
+                                'balance': 0.844719435318965,
+                                'broken%': 0,
+                                'bw_util': 0.07,
+                                'cpu_util': 0.43,
+                                'mem_util': 0.67,
+                                'scheduled%': 100,
+                                'utilization%': 39},
+                            {   'ALGO': 'LU_BAR_weights',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(mbw=30,cpu=120,mem=150)',
+                                'balance': 0.844719435318965,
+                                'broken%': 0,
+                                'bw_util': 0.07,
+                                'cpu_util': 0.43,
+                                'mem_util': 0.67,
+                                'scheduled%': 100,
+                                'utilization%': 39},
+                            {   'ALGO': 'baseline',
+                                'NODES': '80(dram=80)',
+                                'TASKS': '300(mbw=30,cpu=120,mem=150)',
+                                'balance': 0.8874985056641533,
+                                'broken%': 6,
+                                'bw_util': 0.05,
+                                'cpu_util': 0.36,
+                                'mem_util': 0.78,
+                                'scheduled%': 67,
+                                'utilization%': 39},
+                            {   'ALGO': 'enough_bw',
+                                'NODES': '80(dram=80)',
+                                'TASKS': '300(mbw=30,cpu=120,mem=150)',
+                                'balance': 0.8999066974208944,
+                                'broken%': 0,
+                                'bw_util': 0.04,
+                                'cpu_util': 0.28,
+                                'mem_util': 0.78,
+                                'scheduled%': 63,
+                                'utilization%': 36},
+                            {   'ALGO': 'BAR',
+                                'NODES': '80(dram=80)',
+                                'TASKS': '300(mbw=30,cpu=120,mem=150)',
+                                'balance': 0.8999066974208944,
+                                'broken%': 0,
+                                'bw_util': 0.04,
+                                'cpu_util': 0.28,
+                                'mem_util': 0.78,
+                                'scheduled%': 63,
+                                'utilization%': 36},
+                            {   'ALGO': 'LU_BAR',
+                                'NODES': '80(dram=80)',
+                                'TASKS': '300(mbw=30,cpu=120,mem=150)',
+                                'balance': 0.8999066974208944,
+                                'broken%': 0,
+                                'bw_util': 0.04,
+                                'cpu_util': 0.28,
+                                'mem_util': 0.78,
+                                'scheduled%': 63,
+                                'utilization%': 36},
+                            {   'ALGO': 'LU_BAR_weights',
+                                'NODES': '80(dram=80)',
+                                'TASKS': '300(mbw=30,cpu=120,mem=150)',
+                                'balance': 0.8999066974208944,
+                                'broken%': 0,
+                                'bw_util': 0.04,
+                                'cpu_util': 0.28,
+                                'mem_util': 0.78,
+                                'scheduled%': 63,
+                                'utilization%': 36},
+                            {   'ALGO': 'baseline',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(mbw=200,cpu=50,mem=50)',
+                                'balance': 0.7823733584536002,
+                                'broken%': 47,
+                                'bw_util': 0.24,
+                                'cpu_util': 0.31,
+                                'mem_util': 0.62,
+                                'scheduled%': 98,
+                                'utilization%': 38},
+                            {   'ALGO': 'enough_bw',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(mbw=200,cpu=50,mem=50)',
+                                'balance': 0.9083332205831005,
+                                'broken%': 0,
+                                'bw_util': 0.24,
+                                'cpu_util': 0.29,
+                                'mem_util': 0.6,
+                                'scheduled%': 96,
+                                'utilization%': 37},
+                            {   'ALGO': 'BAR',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(mbw=200,cpu=50,mem=50)',
+                                'balance': 0.9083332205831005,
+                                'broken%': 0,
+                                'bw_util': 0.24,
+                                'cpu_util': 0.29,
+                                'mem_util': 0.6,
+                                'scheduled%': 96,
+                                'utilization%': 37},
+                            {   'ALGO': 'LU_BAR',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(mbw=200,cpu=50,mem=50)',
+                                'balance': 0.8962323600442272,
+                                'broken%': 0,
+                                'bw_util': 0.24,
+                                'cpu_util': 0.31,
+                                'mem_util': 0.67,
+                                'scheduled%': 100,
+                                'utilization%': 40},
+                            {   'ALGO': 'LU_BAR_weights',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(mbw=200,cpu=50,mem=50)',
+                                'balance': 0.8962323600442272,
+                                'broken%': 0,
+                                'bw_util': 0.24,
+                                'cpu_util': 0.31,
+                                'mem_util': 0.67,
+                                'scheduled%': 100,
+                                'utilization%': 40},
+                            {   'ALGO': 'baseline',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(mbw=200,cpu=50,mem=50)',
+                                'balance': -0.4720408055573715,
+                                'broken%': 74,
+                                'bw_util': 0.22,
+                                'cpu_util': 0.23,
+                                'mem_util': 0.24,
+                                'scheduled%': 100,
+                                'utilization%': 23},
+                            {   'ALGO': 'enough_bw',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(mbw=200,cpu=50,mem=50)',
+                                'balance': 0.9249351525453278,
+                                'broken%': 0,
+                                'bw_util': 0.22,
+                                'cpu_util': 0.23,
+                                'mem_util': 0.24,
+                                'scheduled%': 100,
+                                'utilization%': 23},
+                            {   'ALGO': 'BAR',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(mbw=200,cpu=50,mem=50)',
+                                'balance': 0.9249351525453278,
+                                'broken%': 0,
+                                'bw_util': 0.22,
+                                'cpu_util': 0.23,
+                                'mem_util': 0.24,
+                                'scheduled%': 100,
+                                'utilization%': 23},
+                            {   'ALGO': 'LU_BAR',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(mbw=200,cpu=50,mem=50)',
+                                'balance': 0.9335933311541144,
+                                'broken%': 0,
+                                'bw_util': 0.22,
+                                'cpu_util': 0.23,
+                                'mem_util': 0.24,
+                                'scheduled%': 100,
+                                'utilization%': 23},
+                            {   'ALGO': 'LU_BAR_weights',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(mbw=200,cpu=50,mem=50)',
+                                'balance': 0.9335933311541144,
+                                'broken%': 0,
+                                'bw_util': 0.22,
+                                'cpu_util': 0.23,
+                                'mem_util': 0.24,
+                                'scheduled%': 100,
+                                'utilization%': 23},
+                            {   'ALGO': 'baseline',
+                                'NODES': '80(dram=80)',
+                                'TASKS': '300(mbw=200,cpu=50,mem=50)',
+                                'balance': 0.8110079448875522,
+                                'broken%': 47,
+                                'bw_util': 0.18,
+                                'cpu_util': 0.23,
+                                'mem_util': 0.5,
+                                'scheduled%': 100,
+                                'utilization%': 30},
+                            {   'ALGO': 'enough_bw',
+                                'NODES': '80(dram=80)',
+                                'TASKS': '300(mbw=200,cpu=50,mem=50)',
+                                'balance': 0.9034955262450605,
+                                'broken%': 0,
+                                'bw_util': 0.18,
+                                'cpu_util': 0.23,
+                                'mem_util': 0.5,
+                                'scheduled%': 100,
+                                'utilization%': 30},
+                            {   'ALGO': 'BAR',
+                                'NODES': '80(dram=80)',
+                                'TASKS': '300(mbw=200,cpu=50,mem=50)',
+                                'balance': 0.9034955262450605,
+                                'broken%': 0,
+                                'bw_util': 0.18,
+                                'cpu_util': 0.23,
+                                'mem_util': 0.5,
+                                'scheduled%': 100,
+                                'utilization%': 30},
+                            {   'ALGO': 'LU_BAR',
+                                'NODES': '80(dram=80)',
+                                'TASKS': '300(mbw=200,cpu=50,mem=50)',
+                                'balance': 0.8911553719563575,
+                                'broken%': 0,
+                                'bw_util': 0.18,
+                                'cpu_util': 0.23,
+                                'mem_util': 0.5,
+                                'scheduled%': 100,
+                                'utilization%': 30},
+                            {   'ALGO': 'LU_BAR_weights',
+                                'NODES': '80(dram=80)',
+                                'TASKS': '300(mbw=200,cpu=50,mem=50)',
+                                'balance': 0.8911553719563575,
+                                'broken%': 0,
+                                'bw_util': 0.18,
+                                'cpu_util': 0.23,
+                                'mem_util': 0.5,
+                                'scheduled%': 100,
+                                'utilization%': 30},
+                            {   'ALGO': 'baseline',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(mbw=300,cpu=0,mem=0)',
+                                'balance': 0.7357952892225326,
+                                'broken%': 70,
+                                'bw_util': 0.33,
+                                'cpu_util': 0.12,
+                                'mem_util': 0.03,
+                                'scheduled%': 100,
+                                'utilization%': 16},
+                            {   'ALGO': 'enough_bw',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(mbw=300,cpu=0,mem=0)',
+                                'balance': 0.9407970350325885,
+                                'broken%': 0,
+                                'bw_util': 0.33,
+                                'cpu_util': 0.12,
+                                'mem_util': 0.03,
+                                'scheduled%': 100,
+                                'utilization%': 16},
+                            {   'ALGO': 'BAR',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(mbw=300,cpu=0,mem=0)',
+                                'balance': 0.9407970350325885,
+                                'broken%': 0,
+                                'bw_util': 0.33,
+                                'cpu_util': 0.12,
+                                'mem_util': 0.03,
+                                'scheduled%': 100,
+                                'utilization%': 16},
+                            {   'ALGO': 'LU_BAR',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(mbw=300,cpu=0,mem=0)',
+                                'balance': 0.949851278805866,
+                                'broken%': 0,
+                                'bw_util': 0.33,
+                                'cpu_util': 0.12,
+                                'mem_util': 0.03,
+                                'scheduled%': 100,
+                                'utilization%': 16},
+                            {   'ALGO': 'LU_BAR_weights',
+                                'NODES': '60(dram=60)',
+                                'TASKS': '300(mbw=300,cpu=0,mem=0)',
+                                'balance': 0.949851278805866,
+                                'broken%': 0,
+                                'bw_util': 0.33,
+                                'cpu_util': 0.12,
+                                'mem_util': 0.03,
+                                'scheduled%': 100,
+                                'utilization%': 16},
+                            {   'ALGO': 'baseline',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(mbw=300,cpu=0,mem=0)',
+                                'balance': -1.5745573221757319,
+                                'broken%': 97,
+                                'bw_util': 0.31,
+                                'cpu_util': 0.09,
+                                'mem_util': 0.01,
+                                'scheduled%': 100,
+                                'utilization%': 13},
+                            {   'ALGO': 'enough_bw',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(mbw=300,cpu=0,mem=0)',
+                                'balance': 0.9535877857682473,
+                                'broken%': 0,
+                                'bw_util': 0.31,
+                                'cpu_util': 0.09,
+                                'mem_util': 0.01,
+                                'scheduled%': 100,
+                                'utilization%': 13},
+                            {   'ALGO': 'BAR',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(mbw=300,cpu=0,mem=0)',
+                                'balance': 0.9535877857682473,
+                                'broken%': 0,
+                                'bw_util': 0.31,
+                                'cpu_util': 0.09,
+                                'mem_util': 0.01,
+                                'scheduled%': 100,
+                                'utilization%': 13},
+                            {   'ALGO': 'LU_BAR',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(mbw=300,cpu=0,mem=0)',
+                                'balance': 0.9597292606636448,
+                                'broken%': 0,
+                                'bw_util': 0.31,
+                                'cpu_util': 0.09,
+                                'mem_util': 0.01,
+                                'scheduled%': 100,
+                                'utilization%': 13},
+                            {   'ALGO': 'LU_BAR_weights',
+                                'NODES': '80(aep=20,dram=60)',
+                                'TASKS': '300(mbw=300,cpu=0,mem=0)',
+                                'balance': 0.9597292606636448,
+                                'broken%': 0,
+                                'bw_util': 0.31,
+                                'cpu_util': 0.09,
+                                'mem_util': 0.01,
+                                'scheduled%': 100,
+                                'utilization%': 13},
+                            {   'ALGO': 'baseline',
+                                'NODES': '80(dram=80)',
+                                'TASKS': '300(mbw=300,cpu=0,mem=0)',
+                                'balance': 0.7972144814548465,
+                                'broken%': 70,
+                                'bw_util': 0.25,
+                                'cpu_util': 0.09,
+                                'mem_util': 0.02,
+                                'scheduled%': 100,
+                                'utilization%': 12}],
+    'extra_charts': False,
+    'max_iteration': 300,
+    'nodes': [   Node(name: dram_0, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_1, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_2, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_3, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_4, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_5, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_6, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_7, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_8, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_9, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_10, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_11, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_12, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_13, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_14, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_15, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_16, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_17, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_18, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_19, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_20, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_21, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_22, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_23, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_24, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_25, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_26, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_27, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_28, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_29, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_30, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_31, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_32, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_33, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_34, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_35, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 31, mem: 183, membw_read: 15.0, membw_write: 15.0}, unassiged: {cpu: 30, mem: 182, membw_read: 0.0, membw_write: 0.0}),
+                 Node(name: dram_36, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_37, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_38, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_39, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_40, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_41, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_42, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_43, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_44, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_45, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_46, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_47, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_48, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_49, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_50, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_51, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_52, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_53, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_54, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_55, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_56, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_57, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_58, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_59, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_60, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_61, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_62, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_63, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_64, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_65, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_66, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_67, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_68, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_69, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_70, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_71, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_72, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_73, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_74, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_75, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_76, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_77, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_78, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}),
+                 Node(name: dram_79, initial: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, free: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150}, unassiged: {cpu: 40, mem: 192, membw_read: 150, membw_write: 150})],
+    'reports_root_directory': 'experiments_results',
+    'scheduler_class': <class 'wca.scheduler.algorithms.fit.FitGeneric'>,
+    'scheduler_init': (   <class 'wca.scheduler.algorithms.fit.FitGeneric'>,
+                          {   'alias': 'enough_bw',
+                              'dimensions': {   cpu,
+                                                mem,
+                                                membw_read,
+                                                membw_write}}),
+    'scheduler_kwargs': {   'alias': 'enough_bw',
+                            'dimensions': {cpu, membw_read, mem, membw_write}},
+    'task_creation_fun_def': (   <class 'wca.scheduler.simulator_experiments.task_generators.TaskGenerator_classes'>,
+                                 {   'counts': {'cpu': 0, 'mbw': 300, 'mem': 0},
+                                     'task_definitions': [   (name: cpu, assignment: None, requested: {cpu: 10, mem: 50, membw_read: 2, membw_write: 1}, real: {cpu: 0, mem: 0, membw_read: 0, membw_write: 0}),
+                                                             (name: mem, assignment: None, requested: {cpu: 1, mem: 100, membw_read: 1, membw_write: 0}, real: {cpu: 0, mem: 0, membw_read: 0, membw_write: 0}),
+                                                             (name: mbw, assignment: None, requested: {cpu: 1, mem: 1, membw_read: 10, membw_write: 5}, real: {cpu: 0, mem: 0, membw_read: 0, membw_write: 0})]})}
+Iterations: 300
+Scheduled tasks (might not be successfully assigned): {'mbw': 300}
+
+Assigned tasks per node:
+   dram_0: {'__ALL__': 10, 'mbw': 10}
+   dram_1: {'__ALL__': 10, 'mbw': 10}
+   dram_2: {'__ALL__': 10, 'mbw': 10}
+   dram_3: {'__ALL__': 10, 'mbw': 10}
+   dram_4: {'__ALL__': 0}
+   dram_5: {'__ALL__': 0}
+   dram_6: {'__ALL__': 0}
+   dram_7: {'__ALL__': 0}
+   dram_8: {'__ALL__': 0}
+   dram_9: {'__ALL__': 0}
+   dram_10: {'__ALL__': 10, 'mbw': 10}
+   dram_11: {'__ALL__': 10, 'mbw': 10}
+   dram_12: {'__ALL__': 10, 'mbw': 10}
+   dram_13: {'__ALL__': 10, 'mbw': 10}
+   dram_14: {'__ALL__': 10, 'mbw': 10}
+   dram_15: {'__ALL__': 10, 'mbw': 10}
+   dram_16: {'__ALL__': 10, 'mbw': 10}
+   dram_17: {'__ALL__': 10, 'mbw': 10}
+   dram_18: {'__ALL__': 10, 'mbw': 10}
+   dram_19: {'__ALL__': 10, 'mbw': 10}
+   dram_20: {'__ALL__': 10, 'mbw': 10}
+   dram_21: {'__ALL__': 10, 'mbw': 10}
+   dram_22: {'__ALL__': 10, 'mbw': 10}
+   dram_23: {'__ALL__': 10, 'mbw': 10}
+   dram_24: {'__ALL__': 10, 'mbw': 10}
+   dram_25: {'__ALL__': 10, 'mbw': 10}
+   dram_26: {'__ALL__': 10, 'mbw': 10}
+   dram_27: {'__ALL__': 10, 'mbw': 10}
+   dram_28: {'__ALL__': 10, 'mbw': 10}
+   dram_29: {'__ALL__': 10, 'mbw': 10}
+   dram_30: {'__ALL__': 10, 'mbw': 10}
+   dram_31: {'__ALL__': 10, 'mbw': 10}
+   dram_32: {'__ALL__': 10, 'mbw': 10}
+   dram_33: {'__ALL__': 10, 'mbw': 10}
+   dram_34: {'__ALL__': 10, 'mbw': 10}
+   dram_35: {'__ALL__': 10, 'mbw': 10}
+   dram_36: {'__ALL__': 0}
+   dram_37: {'__ALL__': 0}
+   dram_38: {'__ALL__': 0}
+   dram_39: {'__ALL__': 0}
+   dram_40: {'__ALL__': 0}
+   dram_41: {'__ALL__': 0}
+   dram_42: {'__ALL__': 0}
+   dram_43: {'__ALL__': 0}
+   dram_44: {'__ALL__': 0}
+   dram_45: {'__ALL__': 0}
+   dram_46: {'__ALL__': 0}
+   dram_47: {'__ALL__': 0}
+   dram_48: {'__ALL__': 0}
+   dram_49: {'__ALL__': 0}
+   dram_50: {'__ALL__': 0}
+   dram_51: {'__ALL__': 0}
+   dram_52: {'__ALL__': 0}
+   dram_53: {'__ALL__': 0}
+   dram_54: {'__ALL__': 0}
+   dram_55: {'__ALL__': 0}
+   dram_56: {'__ALL__': 0}
+   dram_57: {'__ALL__': 0}
+   dram_58: {'__ALL__': 0}
+   dram_59: {'__ALL__': 0}
+   dram_60: {'__ALL__': 0}
+   dram_61: {'__ALL__': 0}
+   dram_62: {'__ALL__': 0}
+   dram_63: {'__ALL__': 0}
+   dram_64: {'__ALL__': 0}
+   dram_65: {'__ALL__': 0}
+   dram_66: {'__ALL__': 0}
+   dram_67: {'__ALL__': 0}
+   dram_68: {'__ALL__': 0}
+   dram_69: {'__ALL__': 0}
+   dram_70: {'__ALL__': 0}
+   dram_71: {'__ALL__': 0}
+   dram_72: {'__ALL__': 0}
+   dram_73: {'__ALL__': 0}
+   dram_74: {'__ALL__': 0}
+   dram_75: {'__ALL__': 0}
+   dram_76: {'__ALL__': 0}
+   dram_77: {'__ALL__': 0}
+   dram_78: {'__ALL__': 0}
+   dram_79: {'__ALL__': 0}
+
+Assigned tasks per cluster: {'__ALL__': 300, 'mbw': 300}
+Unassigned tasks: {'__ALL__': 0}
+Broken assignments: 0
+resource_usage(cpu, mem, membw_flat) = (0.09, 0.02, 0.25)
+resource_usage_per_node(node=dram_0, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_1, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_2, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_3, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_4, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_5, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_6, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_7, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_8, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_9, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_10, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_11, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_12, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_13, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_14, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_15, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_16, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_17, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_18, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_19, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_20, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_21, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_22, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_23, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_24, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_25, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_26, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_27, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_28, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_29, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_30, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_31, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_32, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_33, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_34, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_35, cpu, mem, membw_flat) = (0.25, 0.05, 0.67)
+resource_usage_per_node(node=dram_36, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_37, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_38, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_39, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_40, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_41, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_42, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_43, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_44, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_45, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_46, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_47, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_48, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_49, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_50, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_51, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_52, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_53, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_54, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_55, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_56, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_57, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_58, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_59, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_60, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_61, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_62, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_63, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_64, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_65, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_66, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_67, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_68, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_69, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_70, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_71, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_72, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_73, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_74, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_75, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_76, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_77, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_78, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+resource_usage_per_node(node=dram_79, cpu, mem, membw_flat) = (0.0, 0.0, 0.0)
+available metrics: wca_scheduler_app_requested_resource, wca_scheduler_fit_predicted_membw_flat_usage, wca_scheduler_node_capacity_resource, wca_scheduler_node_used_resource

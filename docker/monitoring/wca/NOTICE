@@ -1,0 +1,86 @@
+wca
+Copyright 2018 Intel Corporation
+
+
+    This software contains portions of confluent-kafka-python
+    from https://github.com/confluentinc/confluent-kafka-python on Apache License 2.0
+    available at component-licenses/APACHE-2.0-LICENSE.
+
+
+    This software contains portions of python-colorlog from
+    https://github.com/borntyping/python-colorlog on MIT License
+    available at component-linceses/MIT-LICENSE.
+    - Copyright (c) 2016 Sam Clements <sam@borntyping.co.uk>
+
+
+    This software contains portions of ruamel.yaml from https://bitbucket.org/ruamel/yaml
+    on MIT License available at component-linceses/MIT-LICENSE.
+    - Copyright (c) 2014-2018 Anthon van der Neut, Ruamel bvba
+
+
+    This software contains portions of flake8 from https://gitlab.com/pycqa/flake8
+    on MIT License available at component-linceses/MIT-LICENSE.
+    - Copyright (C) 2011-2013 Tarek Ziade <tarek@ziade.org>
+    - Copyright (C) 2012-2016 Ian Cordasco <graffatcolmingov@gmail.com>
+
+
+    This software contains portions of ipython from https://github.com/ipython/ipython
+    on SD 3-clause "New" or "Revised" License available at component-licenses/BSD3-clause.
+    - Copyright (c) 2008-Present, IPython Development Team
+    - Copyright (c) 2001-2007, Fernando Perez <fernando.perez@colorado.edu>
+    - Copyright (c) 2001, Janko Hauser <jhauser@zscout.de>
+    - Copyright (c) 2001, Nathaniel Gray <n8gray@caltech.edu>
+
+
+    This software contains portions of pytest from https://github.com/pytest-dev/pytest
+    on MIT License available at component-linceses/MIT-LICENSE.
+    - Copyright (c) 2004-2017 Holger Krekel and others
+
+
+    This software contains portions of pytest-cov from
+    https://github.com/pytest-dev/pytest-cov on MIT License available
+    at component-linceses/MIT-LICENSE.
+    - Copyright (c) 2010 Meme Dough
+
+
+    This software contains portions of Kubernetes Dashboard
+    from https://github.com/kubernetes/dashboard on Apache License 2.0
+    available at component-licenses/APACHE-2.0-LICENSE.
+    - Copyright 2017 The Kubernetes Authors.
+    The code used is in the filed:
+    - examples/kubernetes/monitoring/dashboard/kubernetes-dashboard.yaml
+    - examples/kubernetes/monitoring/dashboard/dashboard_metrics_scraper.yaml
+    - examples/kubernetes/monitoring/dashboard/configmap_secrets.yaml
+    - examples/kubernetes/monitoring/dashboard/service_account_dashboard.yaml
+
+
+    This software contains portions of fluentd-kubernetes-daemonset
+    from https://github.com/fluent/fluentd-kubernetes-daemonset on Apache License 2.0
+    available at component-licenses/APACHE-2.0-LICENSE.
+    The code used is in the file:
+    - examples/kubernetes/monitoring/fluentd/daemonset.yaml
+
+
+    This software contains portions of Prometheus Operator
+    from https://github.com/coreos/prometheus-operator on Apache License 2.0
+    available at component-licenses/APACHE-2.0-LICENSE.
+    - Copyright 2015 CoreOS, Inc
+    The code used is in the files:
+    - examples/kubernetes/monitoring/prometheus/operator/deployment.yaml
+    - examples/kubernetes/monitoring/prometheus/prometheus.yaml
+
+
+    This software contains portions of Node exporter
+    from https://https://github.com/prometheus/node_exporter on Apache License 2.0
+    available at component-licenses/APACHE-2.0-LICENSE.
+    - Copyright 2013-2015 The Prometheus Authors
+    The code used is in the file:
+    - examples/kubernetes/monitoring/prometheus/prometheus_rule.16-compatibility-rules-new-to-old.yaml
+
+
+    This software contains portions of kube-state-metrics from
+    https://github.com/kubernetes/kube-state-metrics on MIT License available
+    at component-linceses/MIT-LICENSE.
+    - Copyright (c) 2010 Meme Dough
+    The code used is in the file:
+    - examples/kubernetes/monitoring/kube-state-metrics/deployment.yaml
