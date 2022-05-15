@@ -50,6 +50,7 @@ spec:
             mountPath: /var/lib/wca/
           - name: cgroup
             mountPath: /sys/fs/cgroup/
+          # KRO TODO: uncomment
           # error: read only filesystem
           # - name: resctrl
           #   mountPath: /sys/fs/resctrl/
@@ -73,7 +74,8 @@ spec:
         #   - /usr/bin/wca.pex
         args:
         - "--config=/etc/wca/allocator_config.yaml"
-        # - "--register=examples.test_allocator:TestAllocator"
+        # KRO TODO: register custom allocator
+        # - "--register=dummy_allocator:DummyAllocator"
         - "--log=debug"
         - "--root"
         resources:
@@ -119,6 +121,7 @@ spec:
         - name: cgroup
           hostPath:
             path: /sys/fs/cgroup/
+        # KRO TODO: uncomment
         # - name: resctrl
         #   hostPath:
         #     path: /sys/fs/resctrl/

@@ -23,7 +23,8 @@ runner: !AllocationRunner
     wss_membw_threshold: 0.01
     wss_stable_cycles: -5
   
-  allocator: !NOPAllocator
+  # TODO: configure
+  allocator: !DummyAllocator
     # config: "/etc/wca/static_allocation.yaml"
 
   allocations_storage: !LogStorage

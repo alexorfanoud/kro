@@ -1,0 +1,28 @@
+No wca/prometheus running, no memory pinning
+20 cpus cluster 8192 memory
+- "-w 12"
+- "-S 30"
+- "-D 6144"
+- "-T 1"
+- "-s ./volumes/docker_servers.txt"
+- "-t 1m"
+- "-Q 5"
+- "-r 0.05"
+- "-j"
+- "-v"
+
+292605.95238095237,381.24285714285713
+276614.4,112.5925
+269505.54761904763,32.65952380952381
+258317.0465116279,19.0
+247599.13953488372,10.348837209302326
+237733.0,7.897674418604652
+228796.58139534883,6.695348837209302
+216330.06818181818,5.267441860465116
+205293.75,4.1325581395348845
+
+CLIENT: for rps 230000 => average QOS of 7.4
+=========================================
+
+Deploy wca and start lowering cache associativity
+Should probably export QOS from the client to prometheus at some point

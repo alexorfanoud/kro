@@ -5,7 +5,8 @@ namespace: wca
 images:
   - name: wca
     newName: aorfanou/wca
-    newTag: master
+    newTag: devel
+    # KRO TODO: configure tag
 
 resources:
   - daemonset.yaml

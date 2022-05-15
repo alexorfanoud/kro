@@ -17,3 +17,4 @@ kubectl apply -k .
 
 ## TODOS
 * Figure out the RDT allocations https://github.com/intel/workload-collocation-agent/blob/master/docs/allocation.rst#rdt : `find /sys/devices/system/cpu -name "*id" | grep cache | xargs cat | sort` -> cache id's
+* Remember to uncomment the resctrl mounts

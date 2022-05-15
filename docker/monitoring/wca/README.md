@@ -3,11 +3,13 @@ This is a fork from https://github.com/intel/workload-collocation-agent.
 ### To build WCA
 
 ```
-WCA_IMAGE=<docker repo>/wca
-WCA_TAG=latest
-# You can use devel target for a dev/debug friendly deployment
-docker build . -t $WCA_IMAGE:$WCA_TAG --network host -f Dockerfile --target standalone
-docker push $WCA_IMAGE:$WCA_TAG
+# For devel build
+docker build . -t aorfanou/wca:devel --network host --target devel
+
+# For standalone buid
+docker build . -t aorfanou/wca:latest --network host --target standalone
+
+docker push aorfanou/wca:<tag>
 ```
 
 ### To deploy to k8s

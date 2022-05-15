@@ -7,7 +7,7 @@ from wca.detectors import Anomaly, TasksData
 from wca.metrics import Metric
 from wca.platforms import Platform
 
-log = logging.getLogger('wca.main')
+log = logging.getLogger(__name__)
 
 @dataclass
 class DummyAllocator(Allocator):

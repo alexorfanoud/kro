@@ -43,4 +43,5 @@ shift $((OPTIND-1))
 ./loader -a ../twitter_dataset/twitter_dataset_unscaled -o ../twitter_dataset/twitter_dataset_scaled -s $server_config -w $threads -S $scaling_factor -D $target_server_memory -j -T $statistics_interval
 
 # Run after we have deducted the maximum RPS that can be served while respecting the QoS
+# KRO TODO: keep only the QoS metric for easier use? eg pipe into grep, awk etc
 ./loader -a ../twitter_dataset/twitter_dataset_scaled -s $server_config -g $get_set_ratio -T $statistics_interval -c $connections -w $threads -e -r $rps_limit
