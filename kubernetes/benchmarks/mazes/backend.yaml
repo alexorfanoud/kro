@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: mazes-backend
+    labels:
+        run: mazes-backend
+spec:
+    # External service
+    type: LoadBalancer
+    ports:
+    # Pod port
+    - port: 8765
+    # Container port
+      targetPort: 8765
+      protocol: TCP
+      name: mazes-backend
+    # External port
+      nodePort: 30004
+    selector:
+        app: mazes-backend
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: mazes-backend
+    labels:
+        app: mazes-backend
+spec:
+    replicas: 3
+    selector:
+        matchLabels:
+            app: mazes-backend
+    template:
+        metadata:
+            name: mazes-backend
+            labels:
+                app: mazes-backend
+        spec:
+            # Schedule pods in separate nodes
+            affinity:
+                podAntiAffinity:
+                    preferredDuringSchedulingIgnoredDuringExecution:
+                    - weight: 100
+                      podAffinityTerm:
+                        labelSelector:
+                          matchExpressions:
+                          - key: app
+                            operator: In
+                            values:
+                            - mazes-backend
+                        topologyKey: "kubernetes.io/hostname"
+            containers:
+            - name: mazes-backend
+              image: aorfanou/mazes_backend
+              imagePullPolicy: Always
+              ports:
+              - containerPort: 8765
+              envFrom:
+                  - configMapRef:
+                      name: app-conf

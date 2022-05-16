@@ -1,0 +1,40 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: mazes-benchmark
+    labels:
+        app: mazes-benchmark
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: mazes-benchmark
+    template:
+        metadata:
+            name: mazes-benchmark
+            labels:
+                app: mazes-benchmark
+            annotations:
+                prometheus.io/scrape: "true"
+                prometheus.io/port: "8001"
+        spec:
+            containers:
+            - name: mazes-benchmark
+              image: aorfanou/mazes_benchmark
+              imagePullPolicy: Always
+              tty: true
+              args:
+              - "--url http://mazes-backend:$(SERVER_PORT)"
+              - "--request_interval 1"
+              - "--request_timeout 200"
+              - "--prom_server_port 8001"
+              - "--maze_size 1000"
+              - "--verbose"
+              envFrom:
+                  - configMapRef:
+                      name: app-conf
+              ports:
+                - containerPort: 8001
+                  protocol: TCP

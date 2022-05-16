@@ -1,0 +1,15 @@
+kind: Service                                                                                           
+apiVersion: v1
+metadata:
+  name: mazes-benchmark 
+  labels:
+    name: mazes-benchmark 
+spec:
+  type: ClusterIP
+  selector:
+    app: mazes-benchmark 
+  ports:
+    - name: benchmark-metrics
+      port: 8001
+      targetPort: 8001
+

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stress-ng
+  labels:
+    app: stress-ng
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stress-ng
+  template:
+    metadata:
+      name: stress-ng
+      labels:
+        app: stress-ng
+    spec:
+      containers:
+
+      - name: stress-ng
+        imagePullPolicy: Always # for debugging purpose and stream the development!
+        image: alexeiled/stress-ng
+        securityContext:
+          privileged: true
+        args:
+        - "--cpu=3"
+        - "--io=3"

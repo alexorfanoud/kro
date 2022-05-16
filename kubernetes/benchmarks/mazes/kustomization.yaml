@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: kro
+
+images:
+  - name: aorfanou/mazes_backend
+    newName: aorfanou/mazes_backend
+    newTag: latest
+  - name: aorfanou/mazes_benchmark
+    newName: aorfanou/mazes_benchmark
+    newTag: latest
+
+resources:
+  - namespace.yaml
+  - app-config.yaml
+  - backend.yaml
+  - adminer.yaml
+  - mysql.yaml
+
+bases:
+  - benchmark
+
+configMapGenerator:
+    - name: mysql-initdb
+      files:
+      - mysql-initdb-config.sql

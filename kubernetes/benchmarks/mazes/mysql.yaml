@@ -1,0 +1,120 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: mysql
+    labels:
+        run: mysql
+spec:
+    type: ClusterIP
+    ports:
+    - port: 3306
+      targetPort: 3306
+      protocol: TCP
+      name: mysql
+    selector:
+        app: mysql
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: mysql
+    labels:
+        app: mysql
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: mysql
+    template:
+        metadata:
+            name: mysql
+            labels:
+                app: mysql
+        spec:
+            initContainers:
+              - name: install-highscores
+                image: busybox
+                command:
+                - wget
+                - "-O"
+                - "/var/lib/mysql-init-files/init_highscores.txt"
+                - https://raw.githubusercontent.com/alexorfanoud/mazes-backend/master/db/init_highscores.txt
+                volumeMounts:
+                - name: mysql-init-files
+                  mountPath: /var/lib/mysql-init-files
+              - name: install-users
+                image: busybox
+                command:
+                - wget
+                - "-O"
+                - "/var/lib/mysql-init-files/init_users.txt"
+                - https://raw.githubusercontent.com/alexorfanoud/mazes-backend/master/db/init_users.txt
+                volumeMounts:
+                - name: mysql-init-files
+                  mountPath: /var/lib/mysql-init-files
+              - name: install-mazes
+                image: busybox
+                command:
+                - wget
+                - "-O"
+                - "/var/lib/mysql-init-files/init_mazes.txt"
+                - https://raw.githubusercontent.com/alexorfanoud/mazes-backend/master/db/init_mazes.txt
+                volumeMounts:
+                - name: mysql-init-files
+                  mountPath: /var/lib/mysql-init-files
+            containers:
+            - name: mysql
+              image: mysql:5.6
+              ports:
+              - containerPort: 3306
+              envFrom:
+                - configMapRef:
+                    name: app-conf
+              volumeMounts:
+              - name: mysql-persistent-storage
+                mountPath: /var/lib/mysql
+              - name: mysql-init-script
+                mountPath: /docker-entrypoint-initdb.d
+              - name: mysql-init-files
+                mountPath: /var/lib/mysql-data
+            volumes:
+            - name: mysql-persistent-storage
+              persistentVolumeClaim:
+                claimName: mysql-pv-claim
+            - name: mysql-init-script
+              configMap:
+                  name: mysql-initdb
+            - name: mysql-init-files
+              emptyDir: {}
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: standard
+  capacity:
+    storage: 7Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 7Gi

@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: adminer
+    labels:
+        run: adminer
+spec:
+    type: LoadBalancer
+    ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: adminer
+      nodePort: 30003
+    selector:
+        app: adminer
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: adminer
+    labels:
+        app: adminer
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: adminer
+    template:
+        metadata:
+            name: adminer
+            labels:
+                app: adminer
+        spec:
+            containers:
+            - name: adminer
+              image: adminer
+              ports:
+              - containerPort: 8080
