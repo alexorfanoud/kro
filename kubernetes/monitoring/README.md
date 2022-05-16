@@ -9,6 +9,7 @@ sudo mkdir /var/lib/prometheus
 sudo chmod 777 /var/lib/prometheus
 sudo mkdir /var/lib/grafana
 sudo chmod 777 /var/lib/grafana
+sudo mount -t resctrl resctrl /sys/fs/resctrl
 ```
 * Now apply the resource manifests
 ```
