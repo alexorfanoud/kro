@@ -1,12 +1,27 @@
-- name: backend rule
+- name: memcached-client
   allocations:
-    cpuset_cpus: "0"
+    cpuset_mems: "1"
+    cpuset_cpus: "10-19"
+    rdt:
+      name: "memcached-client-rdt"
+      l3: "L3:1=fffff"
   labels:
-    app: mazes-backend
+    app: memcached-client
 
-- name: stressng rule
+- name: memcached-server
   allocations:
-    cpuset_cpus: "1"
-    cpu_shares: 0.7
+    cpuset_mems: "0"
+    cpuset_cpus: "0-9"
+    rdt:
+      name: "memcached-server-rdt"
+      l3: "L3:0=ffff0"
   labels:
-    app: stress-ng
+    app: memcached-server
+
+- name: memcached-rps-calculator
+  allocations:
+    cpuset_mems: "1"
+    cpuset_cpus: "10-19"
+  labels:
+    app: memcached-rps-calculator
+
