@@ -16,6 +16,9 @@ spec:
             name: memcached-client
             labels:
                 app: memcached-client
+            annotations:
+                prometheus.io/scrape: "true"
+                prometheus.io/port: "8001"
         spec:
           containers:
           - name: memcached-client
@@ -23,14 +26,21 @@ spec:
             imagePullPolicy: Always
             tty: true
             args:
-            - "-w 6"
-            - "-S 2"
-            - "-D 4096"
-            - "-T 1"
-            - "-s ./volumes/docker_servers.txt"
-            - "-g 0.8"
-            - "-c 200"
-            - "-r 50000"
+            - "--threads 4"
+            - "--scaling_factor 2"
+            - "--target_server_memory 2048"
+            - "--statistics_interval 1"
+            - "--server_config ./volumes/docker_servers.txt"
+            - "--timeout 15s"
+            - "--QOS 10"
+            - "--rps_reduction_factor 0.1"
+            - "--warmup_server"
+            - "--prom_server_port 8001"
+            - "--rps 80000"
+            - "-v"
+            ports:
+            - containerPort: 8001
+              protocol: TCP
             volumeMounts:
             - name: docker-servers
               mountPath: /usr/src/memcached/memcached_client/volumes/docker_servers.txt

@@ -1,0 +1,15 @@
+kind: Service                                                                                           
+apiVersion: v1
+metadata:
+  name: memcached-client 
+  labels:
+    name: memcached-client 
+spec:
+  type: ClusterIP
+  selector:
+    app: memcached-client 
+  ports:
+    - name: memcached-client-metrics
+      port: 8001
+      targetPort: 8001
+

@@ -19,19 +19,20 @@ spec:
         spec:
           containers:
           - name: memcached-rps-calculator
-            image: aorfanou/cloudsuite-data-caching-rps-calculator:latest
+            image: aorfanou/cloudsuite-data-caching-client:latest
             imagePullPolicy: Always
             tty: true
             args:
-            - "-w 6"
-            - "-S 2"
-            - "-D 4096"
-            - "-T 1"
-            - "-s ./volumes/docker_servers.txt"
-            - "-t 15s"
-            - "-Q 10"
-            - "-r 0.1"
-            - "-j"
+            - "--threads 6"
+            - "--scaling_factor 2"
+            - "--target_server_memory 4096"
+            - "--statistics_interval 1"
+            - "--server_config ./volumes/docker_servers.txt"
+            - "--timeout 15s"
+            - "--QOS 10"
+            - "--rps_reduction_factor 0.1"
+            - "--warmup_server"
+            - "--calculate_rps"
             - "-v"
             volumeMounts:
             - name: docker-servers
