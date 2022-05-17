@@ -237,12 +237,13 @@ def calculate_max_rps() -> int:
 
 def run_client(rps: int):
     start_http_server(ARGS.prom_server_port)
-    qos_gauge = Gauge('memcached_95th_percentile_ms', 'description')
+    memcached_gauge = Gauge('memcached_metrics', 'Metrics that come from the memcached benchmark output', ['metric'])
     while 1:
         partial_run_results = execute_benchmark(rps)
         Logger.warn(partial_run_results)
         statistics = process_run_statistics(rps, pd.DataFrame.from_records(partial_run_results, columns=OUTPUT_COLS))
-        qos_gauge.set(statistics['95th'].mean())
+        for col in statistics.columns:
+            memcached_gauge.labels(col).set(statistics[col].mean())
 
 if __name__ == "__main__":
     main()
