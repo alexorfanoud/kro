@@ -2,9 +2,6 @@
   allocations:
     cpuset_mems: "1"
     cpuset_cpus: "10-19"
-    rdt:
-      name: "memcached-client-rdt"
-      l3: "L3:1=fffff"
   labels:
     app: memcached-client
 
@@ -14,7 +11,7 @@
     cpuset_cpus: "0-9"
     rdt:
       name: "memcached-server-rdt"
-      l3: "L3:0=ffff0"
+      l3: "L3:0=fffff"
   labels:
     app: memcached-server
 
@@ -25,3 +22,30 @@
   labels:
     app: memcached-rps-calculator
 
+- name: prometheus
+  allocations:
+    cpuset_mems: "1"
+    cpuset_cpus: "10-19"
+  labels:
+    name: "prometheus"
+
+- name: prometheus-operator
+  allocations:
+    cpuset_mems: "1"
+    cpuset_cpus: "10-19"
+  labels:
+    name: "prometheus-operator"
+
+- name: grafana
+  allocations:
+    cpuset_mems: "1"
+    cpuset_cpus: "10-19"
+  labels:
+    name: grafana
+
+- name: wca
+  allocations:
+    cpuset_mems: "1"
+    cpuset_cpus: "10-19"
+  labels:
+    name: wca

@@ -36,7 +36,7 @@ spec:
             - "--rps_reduction_factor 0.1"
             - "--warmup_server"
             - "--prom_server_port 8001"
-            - "--rps 80000"
+            - "--rps 20000"
             - "-v"
             ports:
             - containerPort: 8001
