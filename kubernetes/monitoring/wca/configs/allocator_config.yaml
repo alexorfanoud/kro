@@ -24,6 +24,7 @@ runner: !AllocationRunner
     wss_stable_cycles: -5
   
   # TODO: configure
+  # allocator: !DummyAllocator
   allocator: !StaticAllocator
     config: "/etc/wca/static_allocation.yaml"
 

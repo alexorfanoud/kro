@@ -74,8 +74,6 @@ spec:
         #   - /usr/bin/wca.pex
         args:
         - "--config=/etc/wca/allocator_config.yaml"
-        # KRO TODO: register custom allocator
-        # - "--register=dummy_allocator:DummyAllocator"
         - "--log=debug"
         - "--root"
         resources:
