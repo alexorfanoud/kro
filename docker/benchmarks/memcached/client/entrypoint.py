@@ -6,10 +6,13 @@
 import argparse
 import os
 import subprocess
+from typing import Callable, List
 import pandas as pd
+from prometheus_client import start_http_server, Gauge
 
 # Globals
 ARGS = None
+OUTPUT_COLS = ["timeDiff", "rps", "requests", "gets", "sets", "hits", "misses", "avg_lat", "90th", "95th", "99th", "std", "min", "max", "avgGetSize"]
 
 class Colors:
     RED='\033[0;31m'
@@ -39,7 +42,7 @@ class Logger:
 class Executor:
 
     @staticmethod
-    def check_output(cmd, fallback = None, **kwargs):
+    def check_output(cmd: List[str], fallback: Callable= None, **kwargs) -> str:
         try:
             ret = subprocess.check_output(cmd, **kwargs)\
                     .decode('utf-8').strip()
@@ -52,7 +55,7 @@ class Executor:
             return None
 
     @staticmethod
-    def pipe(commands, fallback = None, **kwargs):
+    def pipe(commands: List[List[str]], fallback: Callable = None, **kwargs) -> str:
         try:
             pipes = [None]
             for idx, cmd in enumerate(commands):
@@ -77,9 +80,12 @@ def init_args():
     parser.add_argument('--server_config', '-s', type=str, required=False, default="./docker_servers.txt")
     parser.add_argument('--timeout', '-t', type=str, required=False, default="15s")
     parser.add_argument('--QOS', '-Q', type=int, required=False, default=10)
-    parser.add_argument('--rps_reduction_factor', '-r', type=float, required=False, default=0.1)
+    parser.add_argument('--rps_reduction_factor', '-f', type=float, required=False, default=0.1)
     parser.add_argument('--rps_diff_tolerance', '-R', type=float, required=False, default=0.1)
     parser.add_argument('--warmup_server', '-j', required=False, action='store_true', default=False)
+    parser.add_argument('--prom_server_port', '-p', type=int, required=False, default=8001)
+    parser.add_argument('--calculate_rps', '-c', required=False, action='store_true', default=False)
+    parser.add_argument('--rps', '-r', type=int, required=False, default=100000)
     parser.add_argument('--verbose', '-v', required=False, action='store_true')
 
     global ARGS
@@ -92,16 +98,18 @@ def main():
 
     if ARGS.warmup_server:
         warmup_server()
-    max_rps = calculate_max_rps()
 
-    Logger.success(f"Max rps calculated: {max_rps}")
+    if ARGS.calculate_rps:
+        max_rps = calculate_max_rps()
 
-    return max_rps
+        Logger.success(f"Max rps calculated: {max_rps}")
 
-
+        return max_rps
+    else:
+        run_client(ARGS.rps)
 
 # Runs the warmup command and scales the input dataset
-def warmup_server():
+def warmup_server() -> None:
 
     Logger.info("Warming up server and scaling the dataset")
     server_warmup = Executor.check_output([
@@ -130,9 +138,9 @@ def warmup_server():
 
 # Runs the benchmark for a given load (requests per second) and returns the statistics
 # in the form of a list ["rps, qos", "rps,qos"]
-def execute_trial_run(rps):
+def execute_benchmark(rps: int) -> List[str]:
 
-    Logger.info(f"Executing trial run for rps {rps}")
+    Logger.info(f"Executing benchmark for rps {rps}")
 
     trial_run = Executor.pipe([
         [
@@ -148,64 +156,62 @@ def execute_trial_run(rps):
             "-T", f"{ARGS.statistics_interval}",
             "-r", f"{rps}"
         ],
-        ["grep", "timeDiff", "-A1"],
-        ["grep", "-v", "timeDiff"],
-        ["awk", "{print $3,$10}"],
-        ["grep", "-v", "^ $"],
+        ["grep", "timeDiff", "-A1", "--no-group-separator"],
+        ["grep", "-v", "timeDiff"]
     ])
 
     if trial_run == "" or trial_run is None:
         Logger.error("Unable to fetch trial_run statistics")
         return None
 
-    # Remove trailing ',' and split per row
-    trial_run_statistics = trial_run[:-1].split(',\n')
-    # Split per column
-    trial_run_statistics = [el.split(',') for el in trial_run_statistics]
-    # Convert to floats
-    trial_run_statistics_numeric = []
-    for row in trial_run_statistics:
-        row_numeric = []
-        for el in row:
-            f = float(el)
-            row_numeric.append(f)
-        trial_run_statistics_numeric.append(row_numeric)
+    # In the form of [[rps, qos], [rps,qos]]
+    run_stats = parse_benchmark_output(trial_run)
+
     Logger.success(f"Successfully fetched trial_run statistics for rps {rps}")
 
-    if ARGS.verbose:
-        Logger.info(f"trial_run_statistics: {trial_run_statistics_numeric}")
+    return run_stats
 
-    return trial_run_statistics_numeric
+def parse_benchmark_output(output: str) -> List[str]:
+    output_parsed = []
+    for row in output.split('\n'):
+        numeric_row = []
+        for col in row.split(','):
+            try:
+                numeric_row.append(float(col.strip()))
+            except Exception as e:
+                Logger.error(f"Column with value: {col} could not be converted to float")
+                numeric_row.append(None)
+        output_parsed.append(numeric_row)
 
+    return output_parsed
 
-
-def process_run_statistics(rps, statistics):
+def process_run_statistics(rps: int, statistics: pd.DataFrame) -> pd.DataFrame:
     # Filter out rows with RPS that does not come close to the given limit for this specific run
     if rps != -1:
         rps_lower = rps * (1 - ARGS.rps_diff_tolerance)
         rps_upper = rps * (1 + ARGS.rps_diff_tolerance)
-        statistics = statistics[(statistics['RPS'] >= rps_lower) & (statistics['RPS'] <= rps_upper)]
+        statistics = statistics[(statistics['rps'] >= rps_lower) & (statistics['rps'] <= rps_upper)]
         
-    # KRO TODO: is the mean a good metric to depend on? Should we use the max or something else?
     if ARGS.verbose:
         Logger.warn(statistics)
-    rps_mean = statistics['RPS'].mean()
-    qos_mean = statistics['QOS'].mean()
 
-    return rps_mean, qos_mean
+    return statistics
 
 
 
 # Calculates the max load for which the QoS satisfies the requirements
-def calculate_max_rps():
+def calculate_max_rps() -> int:
     qos = ARGS.QOS + 1
     rps = -1
     stats_output = ""
 
     while qos > ARGS.QOS and (rps == -1 or rps > 10000):
-        trial_run_statistics = execute_trial_run(rps)
-        statistics = pd.DataFrame.from_records(trial_run_statistics, columns=['RPS','QOS'])
-        rps_mean, qos_mean = process_run_statistics(rps, statistics)
+        trial_run_statistics = execute_benchmark(rps)
+        statistics = process_run_statistics(rps, pd.DataFrame.from_records(trial_run_statistics, columns=OUTPUT_COLS))
+
+        # KRO TODO: is the mean a good metric to depend on? Should we use the max or something else?
+        rps_mean = statistics['rps'].mean()
+        qos_mean = statistics['95th'].mean()
 
         Logger.warn(f"For run with rps: {rps_mean} found a mean QoS of: {qos_mean}")
         stats_output += f"{rps_mean},{qos_mean}\n"
@@ -229,6 +235,14 @@ def calculate_max_rps():
     return res
 
 
+def run_client(rps: int):
+    start_http_server(ARGS.prom_server_port)
+    qos_gauge = Gauge('memcached_95th_percentile_ms', 'description')
+    while 1:
+        partial_run_results = execute_benchmark(rps)
+        Logger.warn(partial_run_results)
+        statistics = process_run_statistics(rps, pd.DataFrame.from_records(partial_run_results, columns=OUTPUT_COLS))
+        qos_gauge.set(statistics['95th'].mean())
 
 if __name__ == "__main__":
     main()
