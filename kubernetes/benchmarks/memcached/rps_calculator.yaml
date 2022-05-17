@@ -23,13 +23,13 @@ spec:
             imagePullPolicy: Always
             tty: true
             args:
-            - "--threads 6"
-            - "--scaling_factor 2"
+            - "--threads 10"
+            - "--scaling_factor 30"
             - "--target_server_memory 4096"
             - "--statistics_interval 1"
             - "--server_config ./volumes/docker_servers.txt"
-            - "--timeout 15s"
-            - "--QOS 10"
+            - "--timeout 2m"
+            - "--QOS 5"
             - "--rps_reduction_factor 0.1"
             - "--warmup_server"
             - "--calculate_rps"

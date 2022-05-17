@@ -24,6 +24,7 @@ class CacheWayRotationAllocator(Allocator):
     cbm: List[str] = field(default_factory=list)
     cbm_idx: int = 0
     initial_run: bool = True
+    run_idx: int = 0
 
     def generate_cbm(self):
         self.cbm.append("".join(self.initial_cbm))
@@ -45,7 +46,8 @@ class CacheWayRotationAllocator(Allocator):
 
         ret = "L3:0=" + self.cbm[self.cbm_idx]
 
-        if self.cbm_idx < len(self.cbm) - 1:
+        # Apply next allocation every 3 runs of wca's intervals (in our case 3m)
+        if self.cbm_idx < len(self.cbm) - 1 and self.run_idx % 3 == 0:
             self.cbm_idx += 1
 
         return ret
@@ -81,6 +83,8 @@ class CacheWayRotationAllocator(Allocator):
             _: Platform,
             tasks_data: TasksData
         ) -> tuple((TasksAllocations, List[Anomaly], List[Metric])):
+
+        self.run_idx += 1
 
         if self.initial_run:
             self.initial_run = False

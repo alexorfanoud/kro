@@ -26,17 +26,17 @@ spec:
             imagePullPolicy: Always
             tty: true
             args:
-            - "--threads 4"
-            - "--scaling_factor 2"
-            - "--target_server_memory 2048"
+            - "--threads 10"
+            - "--scaling_factor 30"
+            - "--target_server_memory 4096"
             - "--statistics_interval 1"
             - "--server_config ./volumes/docker_servers.txt"
-            - "--timeout 15s"
+            - "--timeout 1m"
             - "--QOS 10"
             - "--rps_reduction_factor 0.1"
             - "--warmup_server"
             - "--prom_server_port 8001"
-            - "--rps 20000"
+            - "--rps 290000"
             - "-v"
             ports:
             - containerPort: 8001

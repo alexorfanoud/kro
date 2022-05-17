@@ -22,6 +22,7 @@ runner: !AllocationRunner
     wss_reset_cycles: 20
     wss_membw_threshold: 0.01
     wss_stable_cycles: -5
+    rdt_enabled: true
   
   # TODO: configure
   allocator: !CacheWayRotationAllocator

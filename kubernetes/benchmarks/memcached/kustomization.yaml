@@ -3,11 +3,11 @@ kind: Kustomization
 namespace: kro
 
 bases:
-  - client
+  # - client
 
 resources:
   - server.yaml
-  # - rps_calculator.yaml
+  - rps_calculator.yaml
 
 configMapGenerator:
   - name: docker-servers

@@ -50,10 +50,8 @@ spec:
             mountPath: /var/lib/wca/
           - name: cgroup
             mountPath: /sys/fs/cgroup/
-          # KRO TODO: uncomment
-          # error: read only filesystem
-          # - name: resctrl
-          #   mountPath: /sys/fs/resctrl/
+          - name: resctrl
+            mountPath: /sys/fs/resctrl/
           - name: dev-cpu
             mountPath: /dev/cpu
           - name: allocator-config
@@ -120,10 +118,9 @@ spec:
         - name: cgroup
           hostPath:
             path: /sys/fs/cgroup/
-        # KRO TODO: uncomment
-        # - name: resctrl
-        #   hostPath:
-        #     path: /sys/fs/resctrl/
+        - name: resctrl
+          hostPath:
+            path: /sys/fs/resctrl/
         - name: dev-cpu
           hostPath:
             path: /dev/cpu
