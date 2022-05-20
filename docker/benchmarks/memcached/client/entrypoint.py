@@ -242,6 +242,8 @@ def run_client(rps: int):
         partial_run_results = execute_benchmark(rps)
         Logger.warn(partial_run_results)
         statistics = process_run_statistics(rps, pd.DataFrame.from_records(partial_run_results, columns=OUTPUT_COLS))
+        Logger.warn(f"rps,qos")
+        Logger.warn(f"{statistics['rps'].mean()},{statistics['95th'].mean()}")
         for col in statistics.columns:
             memcached_gauge.labels(col).set(statistics[col].mean())
 
