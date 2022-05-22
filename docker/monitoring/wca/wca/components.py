@@ -32,7 +32,7 @@ from wca import mesos
 from wca import kubernetes
 from wca import storage
 from wca.extra import static_node
-from wca.extra import numa_allocator, dummy_allocator
+from wca.extra import numa_allocator
 from wca import security
 
 REGISTERED_COMPONENTS = [
@@ -50,7 +50,6 @@ REGISTERED_COMPONENTS = [
     kubernetes.CgroupDriverType,
     static_node.StaticNode,
     numa_allocator.NUMAAllocator,
-    dummy_allocator.DummyAllocator,
     static_allocator.StaticAllocator,
     security.SSL,
     measurement.TaskLabelRegexGenerator,

@@ -74,6 +74,7 @@ spec:
         #   - /usr/bin/wca.pex
         args:
         - "--config=/etc/wca/allocator_config.yaml"
+        - "--register=extra.cache_way_rotation_allocator:CacheWayRotationAllocator"
         - "--log=debug"
         - "--root"
         resources:
