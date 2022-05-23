@@ -12,3 +12,13 @@
       l3: "L3:0=fffff"
   labels:
     app: memcached-server
+
+- name: mazes-server
+  allocations:
+    cpuset_mems: "0"
+    cpuset_cpus: "0-9"
+    rdt:
+      name: "mazes-server-rdt"
+      l3: "L3:0=fffff"
+  labels:
+    app: mazes-backend
