@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-server
+spec:
+  selector:
+    app: nginx-server
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: nginx-server
+    labels:
+        app: nginx-server
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: nginx-server
+    template:
+        metadata:
+            name: nginx-server
+            labels:
+                app: nginx-server
+        spec:
+          initContainers:
+          - name: dataset
+            image: cloudsuite3/media-streaming:dataset
+            command: ["cp", "-a", "/videos/.", "/videos-volume/"]
+            volumeMounts:
+              - name: dataset-volume
+                mountPath: /videos-volume
+          containers:
+          - name: nginx-server
+            image: cloudsuite3/media-streaming:server
+            imagePullPolicy: Always
+            tty: true
+            ports:
+            - containerPort: 80
+            volumeMounts:
+            - name: dataset-volume
+              mountPath: /videos
+          volumes:
+          - name: dataset-volume
+            emptyDir: {}

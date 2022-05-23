@@ -1,0 +1,43 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: nginx-client
+    labels:
+        app: nginx-client
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: nginx-client
+    template:
+        metadata:
+            name: nginx-client
+            labels:
+                app: nginx-client
+        spec:
+          initContainers:
+          - name: dataset
+            image: cloudsuite3/media-streaming:dataset
+            command: ["cp", "-a", "/videos/.", "/videos-volume/"]
+            volumeMounts:
+              - name: dataset-volume
+                mountPath: /videos-volume
+          containers:
+          - name: nginx-client
+            image: cloudsuite3/media-streaming:client
+            imagePullPolicy: Always
+            tty: true
+            args: ["nginx-server"]
+            volumeMounts:
+            - name: dataset-volume
+              mountPath: /videos
+            - name: output-volume
+              mountPath: /output
+          volumes:
+          - name: dataset-volume
+            emptyDir: {}
+          - name: output-volume
+            hostPath:
+              path: /testOutput

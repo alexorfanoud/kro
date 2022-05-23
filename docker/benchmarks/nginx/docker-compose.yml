@@ -1,0 +1,29 @@
+version: '3.6'
+
+services:
+    dataset:
+      image: cloudsuite3/media-streaming:dataset
+      volumes:
+      - dataset-volume:/videos
+
+    server:
+      image: cloudsuite3/media-streaming:server
+      tty: true
+      hostname: nginx_server
+      depends_on:
+      - dataset
+      volumes:
+      - dataset-volume:/videos
+
+    client:
+      image: cloudsuite3/media-streaming:client
+      tty: true
+      depends_on:
+      - dataset
+      volumes:
+      - "./outout:/output"
+      - dataset-volume:/videos
+      command: ["nginx_server"]
+
+volumes:
+  dataset-volume:
