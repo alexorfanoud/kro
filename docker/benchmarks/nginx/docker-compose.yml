@@ -16,14 +16,15 @@ services:
       - dataset-volume:/videos
 
     client:
-      image: cloudsuite3/media-streaming:client
+      # image: cloudsuite3/media-streaming:client
+      build: ./client
       tty: true
       depends_on:
       - dataset
       volumes:
-      - "./outout:/output"
+      - "./output:/output"
       - dataset-volume:/videos
-      command: ["nginx_server"]
+      command: ["nginx_server", "3000"]
 
 volumes:
   dataset-volume:

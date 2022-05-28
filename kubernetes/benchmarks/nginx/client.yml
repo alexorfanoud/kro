@@ -26,10 +26,10 @@ spec:
                 mountPath: /videos-volume
           containers:
           - name: nginx-client
-            image: cloudsuite3/media-streaming:client
+            image: aorfanou/cloudsuite-media-streaming-client:latest
             imagePullPolicy: Always
             tty: true
-            args: ["nginx-server"]
+            args: ["nginx-server", "5000"]
             volumeMounts:
             - name: dataset-volume
               mountPath: /videos
