@@ -22,3 +22,13 @@
       l3: "L3:0=fffff"
   labels:
     app: mazes-backend
+
+- name: nginx-server
+  allocations:
+    cpuset_mems: "0"
+    cpuset_cpus: "0-9"
+    rdt:
+      name: "nginx-server-rdt"
+      l3: "L3:0=fffff"
+  labels:
+    app: nginx-server
