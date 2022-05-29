@@ -1,0 +1,25 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: web-search-client
+    labels:
+        app: web-search-client
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: web-search-client
+    template:
+        metadata:
+            name: web-search-client
+            labels:
+                app: web-search-client
+        spec:
+          containers:
+          - name: web-search-client
+            image: cloudsuite3/web-search:client
+            imagePullPolicy: Always
+            tty: true
+            args: ["web-search-server", "50", "90", "60", "60"]

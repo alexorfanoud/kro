@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-search-server
+spec:
+  selector:
+    app: web-search-server
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 8983
+    targetPort: 8983
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: web-search-server
+    labels:
+        app: web-search-server
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: web-search-server
+    template:
+        metadata:
+            name: web-search-server
+            labels:
+                app: web-search-server
+        spec:
+          containers:
+          - name: web-search-server
+            image: cloudsuite3/web-search:server
+            imagePullPolicy: Always
+            tty: true
+            args: ["12g", "1"]
+            ports:
+            - containerPort: 8983
+

@@ -1,0 +1,15 @@
+version: '3.6'
+
+services:
+    server:
+      image: cloudsuite3/web-search:server
+      hostname: web-search-server
+      ports:
+      - 8983:8983
+      command: ["12g", "1"]
+
+    client:
+      image: cloudsuite3/web-search:client
+      command: ["web-search-server", "50", "90", "60", "60"]
+      depends_on:
+      - server
