@@ -1,0 +1,161 @@
+UN: Sun May 29 00:52:07 EEST 2022 ----------------- 
+----------------
+allocation: fffff
+Total connections = 2184
+Requests: 35416
+Replies: 35320
+Reply rate: 26.80
+Reply time: .35
+Net I/O: 316609.7
+----------------
+allocation: 7ffff
+Total connections = 2088
+Requests: 35320
+Replies: 35320
+Reply rate: 26.80
+Reply time: .35
+Net I/O: 316608.1
+----------------
+allocation: 3ffff
+Total connections = 1364
+Requests: 23148
+Replies: 23148
+Reply rate: 17.50
+Reply time: .32
+Net I/O: 211923.8
+----------------
+allocation: 1ffff
+Total connections = 1364
+Requests: 23148
+Replies: 23148
+Reply rate: 17.50
+Reply time: .32
+Net I/O: 211919.3
+----------------
+allocation: 0ffff
+Total connections = 2376
+Requests: 32300
+Replies: 32300
+Reply rate: 24.50
+Reply time: .40
+Net I/O: 286741.4
+----------------
+allocation: 07fff
+Total connections = 3924
+Requests: 38808
+Replies: 38680
+Reply rate: 29.30
+Reply time: .42
+Net I/O: 347563.0
+----------------
+allocation: 03fff
+Total connections = 2836
+Requests: 38680
+Replies: 38680
+Reply rate: 29.30
+Reply time: .45
+Net I/O: 347540.7
+----------------
+allocation: 01fff
+Total connections = 2088
+Requests: 35320
+Replies: 35320
+Reply rate: 26.80
+Reply time: .35
+Net I/O: 316599.3
+----------------
+allocation: 00fff
+Total connections = 3508
+Requests: 38680
+Replies: 38680
+Reply rate: 29.30
+Reply time: .47
+Net I/O: 347550.6
+----------------
+allocation: 007ff
+Total connections = 2088
+Requests: 35320
+Replies: 35320
+Reply rate: 26.80
+Reply time: .37
+Net I/O: 316610.4
+----------------
+allocation: 003ff
+Total connections = 2376
+Requests: 32300
+Replies: 32300
+Reply rate: 24.50
+Reply time: .45
+Net I/O: 286740.9
+----------------
+allocation: 001ff
+Total connections = 2088
+Requests: 35320
+Replies: 35320
+Reply rate: 26.80
+Reply time: .40
+Net I/O: 316611.1
+----------------
+allocation: 000ff
+Total connections = 2600
+Requests: 32300
+Replies: 32300
+Reply rate: 24.50
+Reply time: .42
+Net I/O: 286737.5
+----------------
+allocation: 0007f
+Total connections = 2120
+Requests: 35352
+Replies: 35320
+Reply rate: 26.80
+Reply time: .42
+Net I/O: 316608.0
+----------------
+allocation: 0003f
+Total connections = 4864
+Requests: 44744
+Replies: 44744
+Reply rate: 33.90
+Reply time: .57
+Net I/O: 405810.6
+----------------
+allocation: 0001f
+Total connections = 2280
+Requests: 32300
+Replies: 32300
+Reply rate: 24.50
+Reply time: .45
+Net I/O: 286742.5
+----------------
+allocation: 0000f
+Total connections = 3028
+Requests: 38680
+Replies: 38680
+Reply rate: 29.30
+Reply time: .47
+Net I/O: 347551.5
+----------------
+allocation: 00007
+Total connections = 3188
+Requests: 38776
+Replies: 38680
+Reply rate: 29.30
+Reply time: .45
+Net I/O: 347560.3
+----------------
+allocation: 00003
+Total connections = 2088
+Requests: 35320
+Replies: 35320
+Reply rate: 26.80
+Reply time: .42
+Net I/O: 316597.2
+----------------
+allocation: 00001
+Total connections = 2280
+Requests: 32300
+Replies: 32300
+Reply rate: 24.50
+Reply time: .47
+Net I/O: 286743.9
