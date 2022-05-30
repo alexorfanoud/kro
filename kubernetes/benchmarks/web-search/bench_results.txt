@@ -1,0 +1,96 @@
+----------Full cache ways
+<benchResults>
+    <benchSummary name="Sample Search Workload" version="0.3">
+        <runId>1</runId>
+        <startTime>Sun May 29 14:16:17 UTC 2022</startTime>
+        <endTime>Sun May 29 14:19:47 UTC 2022</endTime>
+        <metric unit="ops/sec">24.983</metric>
+        <passed>true</passed>
+    </benchSummary>
+    <driverSummary name="SearchDriver">
+        <metric unit="ops/sec">24.983</metric>
+        <startTime>Sun May 29 14:16:17 UTC 2022</startTime>
+        <endTime>Sun May 29 14:19:47 UTC 2022</endTime>
+        <totalOps unit="operations">1499</totalOps>
+        <users>50</users>
+        <rtXtps>46.6275</rtXtps>
+        <passed>true</passed>
+        <mix allowedDeviation="0.0000">
+            <operation name="GET">
+                <successes>1499</successes>
+                <failures>0</failures>
+                <mix>1.0000</mix>
+                <requiredMix>1.0000</requiredMix>
+                <passed>true</passed>
+            </operation>
+        </mix>
+        <responseTimes unit="seconds">
+            <operation name="GET" r90th="0.500">
+                <avg>0.036</avg>
+                <max>0.197</max>
+                <sd>0.034</sd>
+                <p90th>0.088</p90th>
+                <passed>true</passed>
+                <p99th>0.138</p99th>
+            </operation>
+        </responseTimes>
+        <delayTimes>
+            <operation name="GET" type="cycleTime">
+                <targetedAvg>1.930</targetedAvg>
+                <actualAvg>1.929</actualAvg>
+                <min>0.002</min>
+                <max>10.000</max>
+                <passed>true</passed>
+            </operation>
+        </delayTimes>
+    </driverSummary>
+</benchResults>
+
+----------1 cache way
+<benchResults>
+    <benchSummary name="Sample Search Workload" version="0.3">
+        <runId>1</runId>
+        <startTime>Sun May 29 16:03:50 UTC 2022</startTime>
+        <endTime>Sun May 29 16:07:20 UTC 2022</endTime>
+        <metric unit="ops/sec">25.450</metric>
+        <passed>true</passed>
+    </benchSummary>
+    <driverSummary name="SearchDriver">
+        <metric unit="ops/sec">25.450</metric>
+        <startTime>Sun May 29 16:03:50 UTC 2022</startTime>
+        <endTime>Sun May 29 16:07:20 UTC 2022</endTime>
+        <totalOps unit="operations">1527</totalOps>
+        <users>50</users>
+        <rtXtps>47.6644</rtXtps>
+        <passed>true</passed>
+        <mix allowedDeviation="0.0000">
+            <operation name="GET">
+                <successes>1527</successes>
+                <failures>0</failures>
+                <mix>1.0000</mix>
+                <requiredMix>1.0000</requiredMix>
+                <passed>true</passed>
+            </operation>
+        </mix>
+        <responseTimes unit="seconds">
+            <operation name="GET" r90th="0.500">
+                <avg>0.043</avg>
+                <max>0.509</max>
+                <sd>0.045</sd>
+                <p90th>0.103</p90th>
+                <passed>true</passed>
+                <p99th>0.180</p99th>
+            </operation>
+        </responseTimes>
+        <delayTimes>
+            <operation name="GET" type="cycleTime">
+                <targetedAvg>1.934</targetedAvg>
+                <actualAvg>1.934</actualAvg>
+                <min>0.004</min>
+                <max>9.999</max>
+                <passed>true</passed>
+            </operation>
+        </delayTimes>
+    </driverSummary>
+</benchResults>
+
