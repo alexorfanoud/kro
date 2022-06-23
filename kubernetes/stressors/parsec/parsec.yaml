@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: parsec
+  labels:
+    app: parsec
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: parsec
+  template:
+    metadata:
+      name: parsec
+      labels:
+        app: parsec
+    spec:
+      containers:
+
+      - name: parsec
+        imagePullPolicy: Always
+        image: aorfanou/parsec
+        tty: true
+        securityContext:
+          privileged: true
+        args:
+        - "-a run"
+        - "-i native"
+        - "-S parsec"
+        - "-n 8"
+        - "-s 1m"
+        - "-p bodytrack,canneal,dedup,facesim,ferret,fluidanimate,freqmine,streamcluster,swaptions,vips,x264"
