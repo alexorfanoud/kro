@@ -32,3 +32,10 @@
       l3: "L3:0=fffff"
   labels:
     app: nginx-server
+
+- name: parsec
+  allocations:
+    cpuset_mems: "0"
+    cpuset_cpus: "0-9"
+  labels:
+    app: parsec
