@@ -171,6 +171,51 @@ def execute_benchmark(rps: int) -> List[str]:
 
     return run_stats
 
+def execute_benchmark_realtime(rps: int) -> None:
+
+    Logger.info(f"Executing realtime benchmark for rps {rps}")
+
+    start_http_server(ARGS.prom_server_port)
+    memcached_gauge = Gauge('memcached_metrics', 'Metrics that come from the memcached benchmark output', ['metric'])
+
+    trial_run = subprocess.Popen([
+            "./loader",
+            "-a", "../twitter_dataset/twitter_dataset_scaled",
+            "-g", "0.8",
+            "-c", "200",
+            "-e",
+            "-s", f"{ARGS.server_config}",
+            "-w", f"{ARGS.threads}",
+            "-D", f"{ARGS.target_server_memory}",
+            "-T", f"{ARGS.statistics_interval}",
+            "-r", f"{rps}"
+    ], stdout=subprocess.PIPE, bufsize=1, universal_newlines=True, encoding="utf-8")
+
+    for line in iter(trial_run.stdout.readline, b''):
+        parsed_line = parse_output_line(line)
+        if parsed_line != []:
+            metrics = process_run_statistics(rps, pd.DataFrame([parsed_line], columns=OUTPUT_COLS))
+            if not metrics.empty:
+                for col in metrics.columns:
+                    memcached_gauge.labels(col).set(metrics[col])
+
+    trial_run.stdout.close()
+    trial_run.wait()
+
+    return
+
+def parse_output_line(line: str) -> List[float]:
+    line_split = line.replace("\n", "").replace(" ","").split(',')
+    numeric_line = []
+    if len(line_split) == 15 and line_split[0] != "timeDiff":
+        for elem in line_split:
+            try:
+                numeric_line.append(float(elem))
+            except Exception:
+                numeric_line.append(None)
+
+    return numeric_line
+
 def parse_benchmark_output(output: str) -> List[str]:
     output_parsed = []
     for row in output.split('\n'):
@@ -236,16 +281,7 @@ def calculate_max_rps() -> int:
 
 
 def run_client(rps: int):
-    start_http_server(ARGS.prom_server_port)
-    memcached_gauge = Gauge('memcached_metrics', 'Metrics that come from the memcached benchmark output', ['metric'])
-    while 1:
-        partial_run_results = execute_benchmark(rps)
-        Logger.warn(partial_run_results)
-        statistics = process_run_statistics(rps, pd.DataFrame.from_records(partial_run_results, columns=OUTPUT_COLS))
-        Logger.warn(f"rps,qos")
-        Logger.warn(f"{statistics['rps'].mean()},{statistics['95th'].mean()}")
-        for col in statistics.columns:
-            memcached_gauge.labels(col).set(statistics[col].mean())
+    execute_benchmark_realtime(rps)
 
 if __name__ == "__main__":
     main()
