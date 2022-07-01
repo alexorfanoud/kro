@@ -25,10 +25,9 @@ runner: !AllocationRunner
     rdt_enabled: true
   
   # TODO: configure
-  allocator: !CacheWayRotationAllocator
+  allocator: !CacheSplitAllocator
     appname: "memcached-server"
     config: "/etc/wca/static_allocation.yaml"
-    cbm_rotation: ["7", "3", "1", "0"]
 
   # allocator: !StaticAllocator
     # config: "/etc/wca/static_allocation.yaml"
