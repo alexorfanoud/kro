@@ -17,17 +17,35 @@ log = logging.getLogger(__name__)
 @dataclass
 class CacheSplitAllocator(Allocator):
 
-    prometheus: Prometheus
     appname: str
+    contestant: str
+    prom_host: str
+    prom_port: int
+    qos_limit: int
+    qos_metric: str
     rules: List[dict] = None
     config: Path =  None
     initial_run: bool = True
+    prometheus: Prometheus = None
 
-    def get_taskdata_from_label(self, tasks_data: TasksData, name: str, value: str):
+    def __post_init__(self):
+        self.prometheus = Prometheus(self.prom_host, self.prom_port)
+
+    def get_qos(self):
+        query_result = self.prometheus.do_query(self.qos_metric)
+        try:
+            value = float(query_result[0]['value'][1])
+        except Exception:
+            value = None
+
+        return value
+        
+    def get_taskdata_from_labels(self, tasks_data: TasksData, name: str, values: List[str]):
+        ret = {}
         for task_data in tasks_data.values():
-            if task_data.labels.get(name) == value:
-                return task_data
-        return None
+            if task_data.labels.get(name) in values:
+                ret[task_data.labels.get(name)] = task_data
+        return ret
 
     def load_config_rules(self, tasks_data: TasksData):
         rules = []
@@ -54,29 +72,36 @@ class CacheSplitAllocator(Allocator):
 
         return tasks_allocations
 
+    def create_split_cache_allocation(self, app_data: dict):
+        split_allocations = {
+            app_data[self.appname].task_id: {
+                'rdt': RDTAllocation(name=self.appname, l3="L3:0=0000f")
+            },
+            app_data[self.contestant].task_id: {
+                'rdt': RDTAllocation(name=self.contestant, l3="L3:0=000f0")
+            },
+        }
+            
+        return split_allocations
+
     def allocate(
             self,
             _: Platform,
             tasks_data: TasksData
         ) -> tuple((TasksAllocations, List[Anomaly], List[Metric])):
 
+        task_allocations = {}
 
         if self.initial_run:
             self.initial_run = False
             return (self.load_config_rules(tasks_data), [], [])
 
-        query_result = self.prometheus.do_query('memcached_metrics{metric="95th"}')
-        log.error("aorf here1")
-        log.error(query_result)
-
-        app_data = self.get_taskdata_from_label(tasks_data, "app", self.appname)
+        app_data = self.get_taskdata_from_labels(tasks_data, "app", [self.appname, self.contestant])
         if app_data is None:
-            return ({}, [], [])
+            return (task_allocations, [], [])
 
-        task_allocations_app = {
-            app_data.task_id: {
-                'rdt': RDTAllocation(name=self.appname, l3="L3:0=fffff")
-            } 
-        }
+        current_qos = self.get_qos()
+        if current_qos > self.qos_limit:
+            task_allocations = self.create_split_cache_allocation(app_data)
 
-        return (task_allocations_app, [], [])
+        return (task_allocations, [], [])
