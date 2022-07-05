@@ -43,6 +43,7 @@ services:
       - "--warmup_server"
       - "--prom_server_port 8001"
       - "--rps 50000"
+      - "--total_time 120"
       - "-v"
       depends_on:
         - server

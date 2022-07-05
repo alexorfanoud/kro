@@ -6,10 +6,10 @@
 - name: memcached-server
   allocations:
     cpuset_mems: "0"
-    cpuset_cpus: "0-9"
+    cpuset_cpus: "0-4"
     rdt:
       name: "memcached-server-rdt"
-      l3: "L3:0=fffff"
+      l3: "L3:0=000ff"
   labels:
     app: memcached-server
 
@@ -36,6 +36,9 @@
 - name: parsec
   allocations:
     cpuset_mems: "0"
-    cpuset_cpus: "0-9"
+    cpuset_cpus: "5-9"
+    rdt:
+      name: "parsec-rdt"
+      l3: "L3:0=000ff"
   labels:
     app: parsec

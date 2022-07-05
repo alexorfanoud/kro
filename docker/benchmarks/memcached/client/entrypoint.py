@@ -6,6 +6,8 @@
 import argparse
 import os
 import subprocess
+import datetime
+import time
 from typing import Callable, List
 import pandas as pd
 from prometheus_client import start_http_server, Gauge
@@ -86,6 +88,8 @@ def init_args():
     parser.add_argument('--prom_server_port', '-p', type=int, required=False, default=8001)
     parser.add_argument('--calculate_rps', '-c', required=False, action='store_true', default=False)
     parser.add_argument('--rps', '-r', type=int, required=False, default=100000)
+    parser.add_argument('--total_time', type=int, required=False, default=3600)
+    parser.add_argument('--output_path', type=str, required=False, default="memcached_metrics.csv")
     parser.add_argument('--verbose', '-v', required=False, action='store_true')
 
     global ARGS
@@ -195,6 +199,8 @@ def execute_benchmark_realtime(rps: int) -> None:
         parsed_line = parse_output_line(line)
         if parsed_line != []:
             metrics = process_run_statistics(rps, pd.DataFrame([parsed_line], columns=OUTPUT_COLS))
+            if ARGS.verbose:
+                Logger.warn(metrics.head(1))
             if not metrics.empty:
                 for col in metrics.columns:
                     memcached_gauge.labels(col).set(metrics[col])
@@ -235,7 +241,7 @@ def process_run_statistics(rps: int, statistics: pd.DataFrame) -> pd.DataFrame:
     if rps != -1:
         rps_lower = rps * (1 - ARGS.rps_diff_tolerance)
         rps_upper = rps * (1 + ARGS.rps_diff_tolerance)
-        statistics = statistics[(statistics['rps'] >= rps_lower) & (statistics['rps'] <= rps_upper)]
+        statistics = statistics[(statistics['rps'] >= rps_lower) & (statistics['rps'] <= rps_upper)].dropna()
         
     if ARGS.verbose:
         Logger.warn(statistics)
@@ -281,7 +287,42 @@ def calculate_max_rps() -> int:
 
 
 def run_client(rps: int):
-    execute_benchmark_realtime(rps)
+    # execute_benchmark_realtime(rps)
+
+    start_http_server(ARGS.prom_server_port)
+    memcached_gauge = Gauge('memcached_metrics', 'Metrics that come from the memcached benchmark output', ['metric'])
+    total_df = pd.DataFrame(columns=OUTPUT_COLS + ["time"])
+
+    client_start = time.time()
+    now = time.time()
+
+    # Limit the time that the client runs
+    while now - client_start < ARGS.total_time:
+        run_start = datetime.datetime.fromtimestamp(time.time())
+        # Run benchmark for a specific amount of time and get the results for that interval
+        partial_run_results = execute_benchmark(rps)
+        # Filter out unwanted rows
+        statistics = process_run_statistics(rps, pd.DataFrame.from_records(partial_run_results, columns=OUTPUT_COLS))
+        # Mark the time that each row was retrieved and keep it locally
+        statistics["time"] = [run_start + datetime.timedelta(seconds=i) for i in statistics.index]
+        total_df = pd.concat([total_df, statistics], axis=0)
+
+        Logger.warn(f"rps,qos")
+        Logger.warn(f"{statistics['rps'].mean()},{statistics['95th'].mean()}")
+
+        for col in statistics.columns:
+            if col != "time":
+                memcached_gauge.labels(col).set(statistics[col].mean())
+        now = time.time()
+
+    Logger.success(f"Completed the client run, output will be written to {ARGS.output_path}")
+    total_df.to_csv(ARGS.output_path, index=False)
+
+    while 1:
+        pass
 
 if __name__ == "__main__":
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.width', None)
+    pd.set_option('display.max_colwidth', None)
     main()

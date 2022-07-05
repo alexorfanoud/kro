@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 import logging
 import os
+import datetime
 from typing import List
 
 from wca.allocators import Allocator, RDTAllocation, TasksAllocations
@@ -27,6 +28,7 @@ class CacheSplitAllocator(Allocator):
     config: Path =  None
     initial_run: bool = True
     prometheus: Prometheus = None
+    performed_allocation: bool = False
 
     def __post_init__(self):
         self.prometheus = Prometheus(self.prom_host, self.prom_port)
@@ -38,6 +40,7 @@ class CacheSplitAllocator(Allocator):
         except Exception:
             value = None
 
+        log.debug(f"QOS METRIC: {value}")
         return value
         
     def get_taskdata_from_labels(self, tasks_data: TasksData, name: str, values: List[str]):
@@ -73,14 +76,17 @@ class CacheSplitAllocator(Allocator):
         return tasks_allocations
 
     def create_split_cache_allocation(self, app_data: dict):
-        split_allocations = {
-            app_data[self.appname].task_id: {
-                'rdt': RDTAllocation(name=self.appname, l3="L3:0=0000f")
-            },
-            app_data[self.contestant].task_id: {
-                'rdt': RDTAllocation(name=self.contestant, l3="L3:0=000f0")
-            },
-        }
+        try:
+            split_allocations = {
+                app_data[self.appname].task_id: {
+                    'rdt': RDTAllocation(name=self.appname, l3="L3:0=0000f;1=00000")
+                },
+                app_data[self.contestant].task_id: {
+                    'rdt': RDTAllocation(name=self.contestant, l3="L3:0=000f0;1=00000")
+                },
+            }
+        except Exception:
+            split_allocations = {}
             
         return split_allocations
 
@@ -96,12 +102,21 @@ class CacheSplitAllocator(Allocator):
             self.initial_run = False
             return (self.load_config_rules(tasks_data), [], [])
 
+        if self.performed_allocation:
+            return (task_allocations, [], [])
+
         app_data = self.get_taskdata_from_labels(tasks_data, "app", [self.appname, self.contestant])
         if app_data is None:
             return (task_allocations, [], [])
 
         current_qos = self.get_qos()
-        if current_qos > self.qos_limit:
+
+        log.warn(f"CacheSplitAllocator - Current QOS: {current_qos}")
+
+        if current_qos is not None and current_qos > self.qos_limit:
             task_allocations = self.create_split_cache_allocation(app_data)
+            self.performed_allocation = True
+            log.warn(f"CacheSplitAllocator - Task allocations: {task_allocations}, Time: {datetime.datetime.now()}")
+
 
         return (task_allocations, [], [])

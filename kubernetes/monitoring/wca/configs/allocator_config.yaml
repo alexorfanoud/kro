@@ -29,7 +29,7 @@ runner: !AllocationRunner
     appname: "memcached-server"
     contestant: "parsec"
     config: "/etc/wca/static_allocation.yaml"
-    qos_limit: 'memcached_metrics{metric="95th"}'
+    qos_metric: 'memcached_metrics{metric="95th"}'
     qos_limit: 25
     prom_host: "http://172.17.0.5"
     prom_port: 9090
