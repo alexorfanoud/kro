@@ -79,10 +79,10 @@ class CacheSplitAllocator(Allocator):
         try:
             split_allocations = {
                 app_data[self.appname].task_id: {
-                    'rdt': RDTAllocation(name=self.appname, l3="L3:0=0000f;1=00000")
+                    'rdt': RDTAllocation(name=self.appname, l3="L3:0=0000f")
                 },
                 app_data[self.contestant].task_id: {
-                    'rdt': RDTAllocation(name=self.contestant, l3="L3:0=000f0;1=00000")
+                    'rdt': RDTAllocation(name=self.contestant, l3="L3:0=000f0")
                 },
             }
         except Exception:
@@ -115,7 +115,8 @@ class CacheSplitAllocator(Allocator):
 
         if current_qos is not None and current_qos > self.qos_limit:
             task_allocations = self.create_split_cache_allocation(app_data)
-            self.performed_allocation = True
+            if task_allocations != {}:
+                self.performed_allocation = True
             log.warn(f"CacheSplitAllocator - Task allocations: {task_allocations}, Time: {datetime.datetime.now()}")
 
 
