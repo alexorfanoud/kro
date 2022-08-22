@@ -25,14 +25,17 @@ runner: !AllocationRunner
     rdt_enabled: true
   
   # TODO: configure
-  allocator: !CacheSplitAllocator
-    appname: "memcached-server"
-    contestant: "parsec"
-    config: "/etc/wca/static_allocation.yaml"
-    qos_metric: 'memcached_metrics{metric="95th"}'
-    qos_limit: 25
+  allocator: !DicerAllocator
+    appname_hp: "memcached-server"
+    appname_be: "parsec"
     prom_host: "http://172.17.0.5"
     prom_port: 9090
+    bw_limit: 5056506521600
+    qos_metric: 'memcached_metrics{metric="95th"}'
+    phase_threshold: 0.2
+    max_ways_available: 6
+    config: "/etc/wca/static_allocation.yaml"
+    min_cache_ways_limit: 2
 
   # allocator: !StaticAllocator
     # config: "/etc/wca/static_allocation.yaml"

@@ -79,10 +79,10 @@ class CacheSplitAllocator(Allocator):
         try:
             split_allocations = {
                 app_data[self.appname].task_id: {
-                    'rdt': RDTAllocation(name=self.appname, l3="L3:0=0000f")
+                    'rdt': RDTAllocation(name=self.appname, l3="L3:0=00007")
                 },
                 app_data[self.contestant].task_id: {
-                    'rdt': RDTAllocation(name=self.contestant, l3="L3:0=000f0")
+                    'rdt': RDTAllocation(name=self.contestant, l3="L3:0=00038")
                 },
             }
         except Exception:
@@ -96,13 +96,13 @@ class CacheSplitAllocator(Allocator):
             tasks_data: TasksData
         ) -> tuple((TasksAllocations, List[Anomaly], List[Metric])):
 
-        task_allocations = {}
+        if self.performed_allocation:
+            return ({}, [], [])
+
+        task_allocations = self.load_config_rules(tasks_data)
 
         if self.initial_run:
             self.initial_run = False
-            return (self.load_config_rules(tasks_data), [], [])
-
-        if self.performed_allocation:
             return (task_allocations, [], [])
 
         app_data = self.get_taskdata_from_labels(tasks_data, "app", [self.appname, self.contestant])
@@ -112,12 +112,16 @@ class CacheSplitAllocator(Allocator):
         current_qos = self.get_qos()
 
         log.warn(f"CacheSplitAllocator - Current QOS: {current_qos}")
+        log.warn(f"CacheSplitAllocator - Task allocations: {task_allocations}")
 
         if current_qos is not None and current_qos > self.qos_limit:
-            task_allocations = self.create_split_cache_allocation(app_data)
-            if task_allocations != {}:
+            new_task_allocations = self.create_split_cache_allocation(app_data)
+            if new_task_allocations != {}:
                 self.performed_allocation = True
-            log.warn(f"CacheSplitAllocator - Task allocations: {task_allocations}, Time: {datetime.datetime.now()}")
+                log.warn(f"CacheSplitAllocator - New task allocations: {new_task_allocations}")
+                task_allocations.update(new_task_allocations)
+            log.warn(f"CacheSplitAllocator - Task allocations updated: {task_allocations}, Time: {datetime.datetime.now()}")
+        
 
 
         return (task_allocations, [], [])
