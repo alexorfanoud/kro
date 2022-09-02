@@ -23,6 +23,7 @@ class DicerAllocator(Allocator):
     prom_port: int
     bw_limit: int
     qos_metric: str
+    qos_limit: int
     phase_threshold: float
     max_ways_available: int
     rules: List[dict] = None
@@ -35,8 +36,8 @@ class DicerAllocator(Allocator):
                               "previous_mem_bw_hp_values": [],
                               "qos_opt": None,
                               "performance_diff": None,
-                              "current_mem_bw_hp": None,
-                              "current_mem_bw_be": None,
+                              "current_mem_bw_hp": 0,
+                              "current_mem_bw_be": 0,
                               "previous_qos_hp": None,
                               "current_qos_hp": None,
                               "bw_saturated": None,
@@ -117,6 +118,7 @@ class DicerAllocator(Allocator):
 
         # Apply the static allocation once (for CPU pinning etc)
         if self.initial_run:
+            self.monitor(app_data)
             self.initial_run = False
             return (task_allocations, [], [])
 
@@ -155,14 +157,20 @@ class DicerAllocator(Allocator):
         # Compare current QOS with previous
         self.assess_performance()
 
-        self.metrics["current_mem_bw_hp"] = app_data[self.appname_hp].measurements["task_mem_bandwidth_bytes"]
-        self.metrics["current_mem_bw_be"] = app_data[self.appname_be].measurements["task_mem_bandwidth_bytes"]
-
         # store previous bw metrics for detecting phase change on HP app
         self.keep_mem_bw_metrics(self.metrics["current_mem_bw_hp"])
 
+        # Find out how many bytes were transfered during the last monitoring period
+        current_mem_bw_hp = app_data[self.appname_hp].measurements["task_mem_bandwidth_bytes"]
+        mem_bw_hp_diff = self.metrics["current_mem_bw_hp"] - current_mem_bw_hp
+        current_mem_bw_be = app_data[self.appname_be].measurements["task_mem_bandwidth_bytes"]
+        mem_bw_be_diff = self.metrics["current_mem_bw_be"] - current_mem_bw_hp
+
+        self.metrics["current_mem_bw_hp"] = current_mem_bw_hp
+        self.metrics["current_mem_bw_be"] = current_mem_bw_be
+
         # Bandwidth saturation
-        if self.metrics["current_mem_bw_hp"] + self.metrics["current_mem_bw_be"] > self.bw_limit:
+        if mem_bw_hp_diff + mem_bw_be_diff > self.bw_limit:
             self.metrics["bw_saturated"] = True
         else:
             self.metrics["bw_saturated"] = False
@@ -171,8 +179,9 @@ class DicerAllocator(Allocator):
 
     def calculate_optimal_allocation(self):
         for cache_ways in range(self.max_ways_available):
+            cache_ways_performance = self.metrics["allocation_qos"].get(cache_ways)
             # starting from the lowest ways allocated, look for an allocation within 20% of the optimal qos
-            if self.performance_near_opt(self.metrics["allocation_qos"].get(cache_ways)):
+            if self.performance_near_opt(cache_ways_performance) or cache_ways_performance < self.qos_limit:
                 self.configuration["optimal_allocation_hp"] = cache_ways
 
         # If we didn't find any acceptable allocation, just apply the max
@@ -204,6 +213,7 @@ class DicerAllocator(Allocator):
     def allocation_optimisation(self):
         log.warn(f"DicerAllocator - allocation_optimisation {self.metrics}")
         if self.phase_change():
+            log.warn(f"DicerAllocator - detected phase change")
             self.allocation_reset()
             return
 
@@ -231,8 +241,9 @@ class DicerAllocator(Allocator):
             return
 
         # stable performance
-        if self.metrics["previous_qos_hp"] * (1 - self.performance_drop_tolerance_percentage) <= self.metrics["current_qos_hp"] and \
-            self.metrics["current_qos_hp"] <= self.metrics["previous_qos_hp"] * (1 + self.performance_drop_tolerance_percentage):
+        if self.metrics["current_qos"] <= self.qos_limit \
+            or (self.metrics["previous_qos_hp"] * (1 - self.performance_drop_tolerance_percentage) <= self.metrics["current_qos_hp"] and \
+                self.metrics["current_qos_hp"] <= self.metrics["previous_qos_hp"] * (1 + self.performance_drop_tolerance_percentage)):
             self.metrics["performance_diff"] = 0
         # improved performance
         elif self.metrics["current_qos_hp"] < self.metrics["previous_qos_hp"]:
