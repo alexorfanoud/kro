@@ -90,6 +90,7 @@ def init_args():
     parser.add_argument('--rps', '-r', type=int, required=False, default=100000)
     parser.add_argument('--total_time', type=int, required=False, default=3600)
     parser.add_argument('--output_path', type=str, required=False, default="memcached_metrics.csv")
+    parser.add_argument('--realtime_output', required=False, action='store_true', default=False)
     parser.add_argument('--verbose', '-v', required=False, action='store_true')
 
     global ARGS
@@ -109,6 +110,9 @@ def main():
         Logger.success(f"Max rps calculated: {max_rps}")
 
         return max_rps
+
+    if ARGS.realtime_output:
+        execute_benchmark_realtime(ARGS.rps)
     else:
         run_client(ARGS.rps)
 
@@ -182,6 +186,10 @@ def execute_benchmark_realtime(rps: int) -> None:
     start_http_server(ARGS.prom_server_port)
     memcached_gauge = Gauge('memcached_metrics', 'Metrics that come from the memcached benchmark output', ['metric'])
 
+    run_start = datetime.datetime.fromtimestamp(time.time())
+
+    client_start = time.time()
+
     trial_run = subprocess.Popen([
             "./loader",
             "-a", "../twitter_dataset/twitter_dataset_scaled",
@@ -195,19 +203,25 @@ def execute_benchmark_realtime(rps: int) -> None:
             "-r", f"{rps}"
     ], stdout=subprocess.PIPE, bufsize=1, universal_newlines=True, encoding="utf-8")
 
+    total_df = pd.DataFrame(columns=OUTPUT_COLS)
     for line in iter(trial_run.stdout.readline, b''):
+        if time.time() - client_start >= ARGS.total_time:
+            break
         parsed_line = parse_output_line(line)
         if parsed_line != []:
             metrics = process_run_statistics(rps, pd.DataFrame([parsed_line], columns=OUTPUT_COLS))
             if ARGS.verbose:
-                Logger.warn(metrics.head(1))
+                Logger.warn(metrics)
             if not metrics.empty:
+                total_df = total_df.append(metrics, ignore_index=True)
                 for col in metrics.columns:
-                    memcached_gauge.labels(col).set(metrics[col])
+                    memcached_gauge.labels(col).set(total_df.tail(30).mean()[col])
 
     trial_run.stdout.close()
     trial_run.wait()
-
+    total_df["time"] = [run_start + datetime.timedelta(seconds=i) for i in total_df.index]
+    total_df.to_csv(ARGS.output_path, index=False)
+    Logger.info(f"Completed realtime benchmark for rps {rps}")
     return
 
 def parse_output_line(line: str) -> List[float]:
@@ -287,8 +301,6 @@ def calculate_max_rps() -> int:
 
 
 def run_client(rps: int):
-    # execute_benchmark_realtime(rps)
-
     start_http_server(ARGS.prom_server_port)
     memcached_gauge = Gauge('memcached_metrics', 'Metrics that come from the memcached benchmark output', ['metric'])
     total_df = pd.DataFrame(columns=OUTPUT_COLS + ["time"])
@@ -318,11 +330,12 @@ def run_client(rps: int):
     Logger.success(f"Completed the client run, output will be written to {ARGS.output_path}")
     total_df.to_csv(ARGS.output_path, index=False)
 
-    while 1:
-        pass
 
 if __name__ == "__main__":
     pd.set_option('display.max_columns', None)
     pd.set_option('display.width', None)
     pd.set_option('display.max_colwidth', None)
     main()
+
+    while 1:
+        pass

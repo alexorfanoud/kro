@@ -5,7 +5,7 @@ metadata:
   labels:
     app: parsec
 spec:
-  replicas: 1
+  replicas: 6
   selector:
     matchLabels:
       app: parsec
@@ -27,6 +27,6 @@ spec:
         - "-a run"
         - "-i native"
         - "-S parsec"
-        - "-n 8"
+        - "-n 1"
         - "-s 1m"
-        - "-p bodytrack,canneal,dedup,facesim,ferret,fluidanimate,freqmine,streamcluster,swaptions,vips,x264"
+        - "-p facesim,ferret,fluidanimate,streamcluster"
