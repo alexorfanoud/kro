@@ -11,7 +11,6 @@ from wca.platforms import Platform
 from wca.config import load_config, Path
 from extra.static_allocator import _build_allocations_from_rules
 
-from wca.logger import debug
 from wca.prometheus import Prometheus
 log = logging.getLogger(__name__)
 
@@ -69,7 +68,7 @@ class DicerAllocator(Allocator):
         except Exception:
             value = None
 
-        log.debug(f'DicerAllocator: HP application QOS: {value}')
+        log.warn(f'DicerAllocator: HP application QOS: {value}')
         return value
         
     def get_taskdata_from_labels(self, tasks_data: TasksData, label_name: str, values: List[str]):
@@ -97,11 +96,6 @@ class DicerAllocator(Allocator):
             log.warning('DicerAllocator: no rules were provided!')
             return {}, [], []
 
-        log.log(debug,
-                'DicerAllocator: handling allocations for %i tasks. ', len(tasks_data))
-        for _, data in tasks_data.items():
-            log.log(debug, '%s', ' '.join(
-                '%s=%s' % (k, v) for k, v in sorted(data.labels.items())))
 
         tasks_allocations = _build_allocations_from_rules(tasks_data, rules)
 
@@ -146,7 +140,7 @@ class DicerAllocator(Allocator):
     # Tracks app metrics and HP performance
     def monitor(self, app_data: dict):
 
-        log.debug(f"DicerAllocator - monitor {self.metrics}")
+        log.warn(f"DicerAllocator - monitor {self.metrics}")
 
         # Track HP app QOS
         current_qos = self.get_qos()
@@ -166,10 +160,10 @@ class DicerAllocator(Allocator):
         # Find out how many bytes were transfered during the last monitoring period
         current_mem_bw_hp = sum(elem.measurements["task_mem_bandwidth_bytes"] for elem in app_data[self.appname_hp])
         # current_mem_bw_hp = app_data[self.appname_hp].measurements["task_mem_bandwidth_bytes"]
-        mem_bw_hp_diff = self.metrics["current_mem_bw_hp"] - current_mem_bw_hp
+        mem_bw_hp_diff = current_mem_bw_hp - self.metrics["current_mem_bw_hp"]
         # current_mem_bw_be = app_data[self.appname_be].measurements["task_mem_bandwidth_bytes"]
         current_mem_bw_be = sum(elem.measurements["task_mem_bandwidth_bytes"] for elem in app_data[self.appname_be])
-        mem_bw_be_diff = self.metrics["current_mem_bw_be"] - current_mem_bw_hp
+        mem_bw_be_diff = current_mem_bw_hp - self.metrics["current_mem_bw_be"]
 
         self.metrics["current_mem_bw_hp"] = current_mem_bw_hp
         self.metrics["current_mem_bw_be"] = current_mem_bw_be
@@ -191,7 +185,7 @@ class DicerAllocator(Allocator):
         for cache_ways in range(self.max_ways_available):
             cache_ways_performance = self.metrics["allocation_qos"].get(cache_ways)
             # starting from the lowest ways allocated, look for an allocation within 20% of the optimal qos
-            if cache_ways_performance is not None and (self.performance_near_opt(cache_ways_performance) or cache_ways_performance < self.qos_limit):
+            if cache_ways_performance is not None and cache_ways_performance < self.qos_limit:
                 self.configuration["optimal_allocation_hp"] = cache_ways
                 return
 
@@ -199,7 +193,7 @@ class DicerAllocator(Allocator):
         self.configuration["optimal_allocation_hp"] = self.max_ways_available - 1
 
     def allocation_sampling(self):
-        log.debug(f"DicerAllocator - allocation_sampling {self.metrics}")
+        log.warn(f"DicerAllocator - allocation_sampling {self.metrics}")
 
         # Apply max ways so that we begin resampling from the top
         self.configuration["current_allocation_hp"] = self.max_ways_available - 1
@@ -207,7 +201,7 @@ class DicerAllocator(Allocator):
         return
 
     def sample(self):
-        log.debug(f"DicerAllocator - sample {self.metrics}")
+        log.warn(f"DicerAllocator - sample {self.metrics}")
         # Completed sampling, apply optimal allocation
         if self.configuration["current_allocation_hp"] == self.min_cache_ways_limit:
             self.calculate_optimal_allocation()
@@ -222,9 +216,14 @@ class DicerAllocator(Allocator):
 
     # Optimises LLC allocation by reducing HP ways gradually
     def allocation_optimisation(self):
-        log.debug(f"DicerAllocator - allocation_optimisation {self.metrics}")
+        log.warn(f"DicerAllocator - allocation_optimisation {self.metrics}")
         if self.phase_change():
             log.warn(f"DicerAllocator - detected phase change")
+            self.allocation_reset()
+            return
+
+        # If performance has reached over a certain limit, we need to reset no matter if it improved or not
+        if self.metrics["current_qos_hp"] > self.qos_limit * pow(1 + self.performance_drop_tolerance_percentage, 2) and not self.configuration["performing_allocation_reset"]:
             self.allocation_reset()
             return
 
@@ -275,7 +274,7 @@ class DicerAllocator(Allocator):
             del self.metrics["previous_mem_bw_hp_values"][0]
 
     def allocation_reset(self):
-        log.debug(f"DicerAllocator - allocation_reset {self.metrics}")
+        log.warn(f"DicerAllocator - allocation_reset {self.metrics}")
         self.calculate_optimal_allocation()
         self.configuration["rollback_allocation_hp"] = self.configuration["current_allocation_hp"]
         self.configuration["current_allocation_hp"] = self.configuration["optimal_allocation_hp"]
@@ -301,5 +300,5 @@ class DicerAllocator(Allocator):
             log.warn(f"dicer allocator exception: {e}")
             allocations = {}
         
-        log.debug(f"DicerAllocator: create_allocations allocations={allocations}")
+        log.warn(f"DicerAllocator: create_allocations allocations={allocations}")
         return allocations

@@ -202,27 +202,28 @@ def execute_benchmark_realtime(rps: int) -> None:
             "-T", f"{ARGS.statistics_interval}",
             "-r", f"{rps}"
     ], stdout=subprocess.PIPE, bufsize=1, universal_newlines=True, encoding="utf-8")
-
+    
+    row_idx = 0
     total_df = pd.DataFrame(columns=OUTPUT_COLS)
     for line in iter(trial_run.stdout.readline, b''):
         if time.time() - client_start >= ARGS.total_time:
             break
         parsed_line = parse_output_line(line)
         if parsed_line != []:
-            metrics = process_run_statistics(rps, pd.DataFrame([parsed_line], columns=OUTPUT_COLS))
-            if ARGS.verbose:
-                Logger.warn(metrics)
+            row_idx += 1
+            metrics = process_run_statistics(rps, pd.DataFrame([[*parsed_line, row_idx]], columns=[*OUTPUT_COLS, "row_idx"]))
             if not metrics.empty:
                 total_df = total_df.append(metrics, ignore_index=True)
                 for col in metrics.columns:
-                    memcached_gauge.labels(col).set(total_df.tail(30).mean()[col])
+                    memcached_gauge.labels(col).set(total_df.tail(60).mean()[col])
 
     trial_run.stdout.close()
     trial_run.wait()
-    total_df["time"] = [run_start + datetime.timedelta(seconds=i) for i in total_df.index]
+    total_df["time"] = [run_start + datetime.timedelta(seconds=total_df.iloc[i]["row_idx"]) for i in total_df.index]
     total_df.to_csv(ARGS.output_path, index=False)
     Logger.info(f"Completed realtime benchmark for rps {rps}")
     return
+
 
 def parse_output_line(line: str) -> List[float]:
     line_split = line.replace("\n", "").replace(" ","").split(',')
