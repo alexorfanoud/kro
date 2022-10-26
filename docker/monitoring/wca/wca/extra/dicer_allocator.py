@@ -17,15 +17,15 @@ log = logging.getLogger(__name__)
 @dataclass
 class DicerAllocator(Allocator):
 
-    appname_hp: str
-    appname_be: str
     prom_host: str
     prom_port: int
     bw_limit: int
     qos_metric: str
-    qos_limit: int
+    qos_limit: float
     phase_threshold: float
     max_ways_available: int
+    cos_hp: str = "highpriority"
+    cos_be: str = "besteffort"
     rules: List[dict] = None
     config: Path =  None
     initial_run: bool = True
@@ -68,7 +68,7 @@ class DicerAllocator(Allocator):
         except Exception:
             value = None
 
-        log.warn(f'DicerAllocator: HP application QOS: {value}')
+        log.warn(f'DicerAllocator: HP application {self.qos_metric} value: {value}')
         return value
         
     def get_taskdata_from_labels(self, tasks_data: TasksData, label_name: str, values: List[str]):
@@ -110,10 +110,10 @@ class DicerAllocator(Allocator):
         task_allocations = self.load_config_rules(tasks_data)
 
         # Get the app metrics from wca
-        app_data = self.get_taskdata_from_labels(tasks_data, "app", [self.appname_hp, self.appname_be])
+        app_data = self.get_taskdata_from_labels(tasks_data, "cos", [self.cos_hp, self.cos_be])
 
         # Wait for both HP and BE to be up
-        if app_data is None or len(app_data.get(self.appname_hp)) == 0 or len(app_data.get(self.appname_be)) == 0:
+        if app_data is None or len(app_data.get(self.cos_hp)) == 0 or len(app_data.get(self.cos_be)) == 0:
             return (task_allocations, [], [])
 
         # Apply the static allocation once (for CPU pinning etc)
@@ -158,11 +158,11 @@ class DicerAllocator(Allocator):
         self.assess_performance()
 
         # Find out how many bytes were transfered during the last monitoring period
-        current_mem_bw_hp = sum(elem.measurements["task_mem_bandwidth_bytes"] for elem in app_data[self.appname_hp])
+        current_mem_bw_hp = sum(elem.measurements["task_mem_bandwidth_bytes"] for elem in app_data[self.cos_hp])
         # current_mem_bw_hp = app_data[self.appname_hp].measurements["task_mem_bandwidth_bytes"]
         mem_bw_hp_diff = current_mem_bw_hp - self.metrics["current_mem_bw_hp"]
         # current_mem_bw_be = app_data[self.appname_be].measurements["task_mem_bandwidth_bytes"]
-        current_mem_bw_be = sum(elem.measurements["task_mem_bandwidth_bytes"] for elem in app_data[self.appname_be])
+        current_mem_bw_be = sum(elem.measurements["task_mem_bandwidth_bytes"] for elem in app_data[self.cos_be])
         mem_bw_be_diff = current_mem_bw_hp - self.metrics["current_mem_bw_be"]
 
         self.metrics["current_mem_bw_hp"] = current_mem_bw_hp
@@ -223,7 +223,7 @@ class DicerAllocator(Allocator):
             return
 
         # If performance has reached over a certain limit, we need to reset no matter if it improved or not
-        if self.metrics["current_qos_hp"] > self.qos_limit * pow(1 + self.performance_drop_tolerance_percentage, 2) and not self.configuration["performing_allocation_reset"]:
+        if self.metrics["current_qos_hp"] > self.qos_limit * pow(1 + self.performance_drop_tolerance_percentage, 2):
             self.allocation_reset()
             return
 
@@ -236,9 +236,10 @@ class DicerAllocator(Allocator):
             return
         # performance drop
         elif self.metrics["performance_diff"] == -1:
-            # If performance dropped during reset, rollback to previous allocation
+            # If performance dropped during reset, start sampling from the top
             if self.configuration["performing_allocation_reset"] == True:
-                self.configuration["current_allocation_hp"] = self.configuration["rollback_allocation_hp"]
+                # self.configuration["current_allocation_hp"] = self.configuration["rollback_allocation_hp"]
+                self.configuration["current_allocation_hp"] = self.max_ways_available - 1
             else:
                 self.allocation_reset()
                 return
@@ -265,7 +266,7 @@ class DicerAllocator(Allocator):
     def phase_change(self):
         if len(self.metrics["previous_mem_bw_hp_values"]) < 3:
             return False
-        return math.abs(self.metrics["current_mem_bw_hp_diff"]) > (1 + self.phase_threshold) * (math.abs((self.metrics["previous_mem_bw_hp_values"][0] * self.metrics["previous_mem_bw_hp_values"][1] * self.metrics["previous_mem_bw_hp_values"][2])) ** (1/3))
+        return abs(self.metrics["current_mem_bw_hp_diff"]) > (1 + self.phase_threshold) * (abs((self.metrics["previous_mem_bw_hp_values"][0] * self.metrics["previous_mem_bw_hp_values"][1] * self.metrics["previous_mem_bw_hp_values"][2])) ** (1/3))
 
     # Stores previous mem bw metrics
     def keep_mem_bw_metrics(self, metric: int):
@@ -292,10 +293,10 @@ class DicerAllocator(Allocator):
         be_cache_ways = hex(be_cache_ways)[2:]
         try:
             allocations = {}
-            for task_hp in app_data[self.appname_hp]:
-                allocations.setdefault(task_hp.task_id, {'rdt': RDTAllocation(name=self.appname_hp, l3=f"L3:0={hp_cache_ways}")})
-            for task_be in app_data[self.appname_be]:
-                allocations.setdefault(task_be.task_id, {'rdt': RDTAllocation(name=self.appname_be, l3=f"L3:0={be_cache_ways}")})
+            for task_hp in app_data[self.cos_hp]:
+                allocations.setdefault(task_hp.task_id, {'rdt': RDTAllocation(name=self.cos_hp, l3=f"L3:0={hp_cache_ways}")})
+            for task_be in app_data[self.cos_be]:
+                allocations.setdefault(task_be.task_id, {'rdt': RDTAllocation(name=self.cos_be, l3=f"L3:0={be_cache_ways}")})
         except Exception as e:
             log.warn(f"dicer allocator exception: {e}")
             allocations = {}

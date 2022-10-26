@@ -10,6 +10,7 @@ import datetime
 import time
 from typing import Callable, List
 import pandas as pd
+from pandas.core.frame import DataFrame
 from prometheus_client import start_http_server, Gauge
 
 # Globals
@@ -91,6 +92,10 @@ def init_args():
     parser.add_argument('--total_time', type=int, required=False, default=3600)
     parser.add_argument('--output_path', type=str, required=False, default="memcached_metrics.csv")
     parser.add_argument('--realtime_output', required=False, action='store_true', default=False)
+    parser.add_argument('--dynamic_load', required=False, action='store_true', default=False)
+    parser.add_argument('--get_set_ratio', '-G', type=float, required=False, default=0.8)
+    parser.add_argument('--connections', '-C', type=int, required=False, default=200)
+    parser.add_argument('--monitoring_period', '-m', type=int, required=False, default=60)
     parser.add_argument('--verbose', '-v', required=False, action='store_true')
 
     global ARGS
@@ -155,9 +160,8 @@ def execute_benchmark(rps: int) -> List[str]:
             "timeout", "--preserve-status", f"{ARGS.timeout}",
             "./loader",
             "-a", "../twitter_dataset/twitter_dataset_scaled",
-            "-g", "0.8",
-            "-c", "200",
-            "-e",
+            "-g", f"{ARGS.get_set_ratio}",
+            "-c", f"{ARGS.connections}",
             "-s", f"{ARGS.server_config}",
             "-w", f"{ARGS.threads}",
             "-D", f"{ARGS.target_server_memory}",
@@ -193,9 +197,8 @@ def execute_benchmark_realtime(rps: int) -> None:
     trial_run = subprocess.Popen([
             "./loader",
             "-a", "../twitter_dataset/twitter_dataset_scaled",
-            "-g", "0.8",
-            "-c", "200",
-            "-e",
+            "-g", f"{ARGS.get_set_ratio}",
+            "-c", f"{ARGS.connections}",
             "-s", f"{ARGS.server_config}",
             "-w", f"{ARGS.threads}",
             "-D", f"{ARGS.target_server_memory}",
@@ -215,7 +218,8 @@ def execute_benchmark_realtime(rps: int) -> None:
             if not metrics.empty:
                 total_df = total_df.append(metrics, ignore_index=True)
                 for col in metrics.columns:
-                    memcached_gauge.labels(col).set(total_df.tail(60).mean()[col])
+                    memcached_gauge.labels(col).set(total_df.tail(ARGS.monitoring_period).mean()[col])
+                memcached_gauge.labels("failed_requests_percentage").set(find_percentage_of_failed_requests(total_df.tail(ARGS.monitoring_period), ARGS.QOS))
 
     trial_run.stdout.close()
     trial_run.wait()
@@ -224,7 +228,9 @@ def execute_benchmark_realtime(rps: int) -> None:
     Logger.info(f"Completed realtime benchmark for rps {rps}")
     return
 
-
+def find_percentage_of_failed_requests(memcached_metrics: DataFrame, qos_limit: float):
+   return len(memcached_metrics[memcached_metrics["95th"] > qos_limit].index) * 100 / len(memcached_metrics[memcached_metrics["95th"] >= 0].index) 
+    
 def parse_output_line(line: str) -> List[float]:
     line_split = line.replace("\n", "").replace(" ","").split(',')
     numeric_line = []

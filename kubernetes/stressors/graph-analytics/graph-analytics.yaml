@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: graph-analytics
+  labels:
+    app: graph-analytics
+    cos: besteffort
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: graph-analytics
+  template:
+    metadata:
+      name: graph-analytics
+      labels:
+        app: graph-analytics
+        cos: besteffort
+    spec:
+      initContainers:
+      - name: twitter-dataset
+        imagePullPolicy: Always
+        image: cloudsuite3/twitter-dataset-graph
+        command: ["cp", "-a", "/data/.", "/dataset-volume"]
+        tty: true
+        volumeMounts:
+        - mountPath: /dataset-volume
+          name: dataset-volume
+      containers:
+      - name: graph-analytics
+        imagePullPolicy: Always
+        image: aorfanou/graph-analytics
+        tty: true
+        securityContext:
+          privileged: true
+        args:
+        - "--executor-memory"
+        - "2G"
+        - "--driver-memory"
+        - "6G"
+        - "--master"
+        - "local[6]"
+        volumeMounts:
+        - mountPath: /data
+          name: dataset-volume
+      volumes:
+      - name: dataset-volume
+        emptyDir: {}

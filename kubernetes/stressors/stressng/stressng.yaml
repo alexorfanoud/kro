@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stressng
+  labels:
+    app: stressng
+    cos: besteffort
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stressng
+  template:
+    metadata:
+      name: stressng
+      labels:
+        app: stressng
+        cos: besteffort
+    spec:
+      containers:
+      - name: stressng
+        imagePullPolicy: Always
+        image: alexeiled/stress-ng
+        tty: true
+        securityContext:
+          privileged: true
+        args:
+        - "-C 6"
+        - "-t 100"
+        - "-M"
+        - "--times"
+        - "--perf"
+        - "--verbose"

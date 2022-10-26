@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: in-memory-analytics
+  labels:
+    app: in-memory-analytics
+    cos: besteffort
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: in-memory-analytics
+  template:
+    metadata:
+      name: in-memory-analytics
+      labels:
+        app: in-memory-analytics
+        cos: besteffort
+    spec:
+      initContainers:
+      - name: dataset
+        imagePullPolicy: Always
+        image: cloudsuite3/movielens-dataset
+        command: ["cp", "-a", "/data/.", "/dataset-volume"]
+        tty: true
+        volumeMounts:
+        - mountPath: /dataset-volume
+          name: dataset-volume
+      containers:
+      - name: in-memory-analytics
+        imagePullPolicy: Always
+        image: aorfanou/in-memory-analytics
+        tty: true
+        securityContext:
+          privileged: true
+        args:
+        - "/data/ml-latest-small"
+        - "/data/myratings.csv"
+        - "--num-executors"
+        - "3"
+        volumeMounts:
+        - mountPath: /data
+          name: dataset-volume
+      volumes:
+      - name: dataset-volume
+        emptyDir: {}

@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
 import logging
+import datetime
+import time
 import os
 from typing import List
 
@@ -46,8 +48,7 @@ class CacheWayRotationAllocator(Allocator):
 
         ret = "L3:0=" + self.cbm[self.cbm_idx]
 
-        # Apply next allocation every 3 runs of wca's intervals (in our case 3m)
-        if self.cbm_idx < len(self.cbm) - 1 and self.run_idx % 3 == 0:
+        if self.cbm_idx < len(self.cbm) - 1:
             self.cbm_idx += 1
 
         return ret
@@ -94,9 +95,12 @@ class CacheWayRotationAllocator(Allocator):
         if app_data is None:
             return ({}, [], [])
 
+    
+        next_alloc = self.get_next_cbm_allocation()
+        log.warn(f'CacheWayRotationAllocator: applying allocation {next_alloc} at time {datetime.datetime.fromtimestamp(time.time())}')
         task_allocations_app = {
             app_data.task_id: {
-                'rdt': RDTAllocation(name=self.appname, l3=self.get_next_cbm_allocation())
+                'rdt': RDTAllocation(name=self.appname, l3=next_alloc)
             } 
         }
 

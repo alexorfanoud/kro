@@ -37,7 +37,8 @@ spec:
             - "--warmup_server"
             - "--prom_server_port 8001"
             - "--rps 290000"
-            - "--total_time 360"
+            - "--total_time 2700"
+            - "--realtime_output"
             - "-v"
             ports:
             - containerPort: 8001

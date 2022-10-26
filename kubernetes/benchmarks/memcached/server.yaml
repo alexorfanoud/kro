@@ -25,11 +25,13 @@ spec:
     selector:
         matchLabels:
             app: memcached-server
+            cos: highpriority
     template:
         metadata:
             name: memcached-server
             labels:
                 app: memcached-server
+                cos: highpriority
         spec:
             containers:
             - name: memcached-server

@@ -6,7 +6,7 @@
 - name: memcached-server
   allocations:
     cpuset_mems: "0"
-    cpuset_cpus: "0-4"
+    cpuset_cpus: "0-3"
     rdt:
       name: "memcached-server-rdt"
       l3: "L3:0=000ff"
@@ -23,22 +23,22 @@
   labels:
     app: mazes-backend
 
-- name: nginx-server
+- name: highpriority
   allocations:
     cpuset_mems: "0"
-    cpuset_cpus: "0-9"
+    cpuset_cpus: "0-3"
     rdt:
-      name: "nginx-server-rdt"
-      l3: "L3:0=fffff"
+      name: "highpriority"
+      l3: "L3:0=0000f"
   labels:
-    app: nginx-server
+    clos: highpriority
 
-- name: parsec
+- name: besteffort
   allocations:
     cpuset_mems: "0"
-    cpuset_cpus: "5-9"
+    cpuset_cpus: "4-9"
     rdt:
-      name: "parsec-rdt"
-      l3: "L3:0=000ff"
+      name: "besteffort"
+      l3: "L3:0=000f0"
   labels:
-    app: parsec
+    clos: besteffort
